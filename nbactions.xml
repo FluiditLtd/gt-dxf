@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>build</actionName>
+            <goals>
+                <goal>install</goal>
+                <goal>deploy</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>test</actionName>
+        </action>
+        <action>
+            <actionName>test.single</actionName>
+            <properties>
+                <test>${packageClassName}</test>
+            </properties>
+        </action>
+    </actions>
