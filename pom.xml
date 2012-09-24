@@ -19,7 +19,7 @@
     <!-- =========================================================== -->
     <groupId>fi.fcg</groupId>
     <artifactId>gt-dxf</artifactId>
-    <version>8.0</version>
+    <version>8.2</version>
     <packaging>jar</packaging>
     <name>dxf</name>
     <description>
@@ -35,7 +35,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <geotools.version>8.0-RC2</geotools.version>
+        <geotools.version>8.2</geotools.version>
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
