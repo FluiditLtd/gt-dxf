@@ -164,7 +164,7 @@ public class DXFEllipse extends DXFEntity {
          */
         List<Coordinate> lc = new ArrayList<Coordinate>();
         
-        if (_start >= _end)
+        if (Math.abs(_start - _end) < 0.5 || _start >= _end)
             _start -= Math.PI * 2;
 
         double sinth = Math.sin(_rotation);
@@ -175,7 +175,7 @@ public class DXFEllipse extends DXFEntity {
         //_start = 0;
         //_end = Math.PI * 2;
         
-        for (double angle = _start; angle < (_end - _start); angle += (_end - _start) / 18) {
+        for (double angle = _start; angle < _end; angle += (_end - _start) / 18) {
             double sina = Math.sin(angle);
             double cosa = Math.cos(angle);
             Coordinate c = new Coordinate(
