@@ -145,8 +145,8 @@ public class DXFArc extends DXFEntity {
 
         double angle = startAngle;
         for (;;) {
-            double x = _point.X() + _radius * Math.sin(angle);
-            double y = _point.Y() + _radius * Math.cos(angle);
+            double x = _point.X() + _radius * Math.cos(angle);
+            double y = _point.Y() + _radius * Math.sin(angle);
 
             Coordinate c = new Coordinate(x, y);
             lc.add(c);
