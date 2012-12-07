@@ -74,21 +74,30 @@ public class DXFMText extends DXFText {
                     doLoop = false;
                     break;
                 case X_1: //"10"
-                    y = cvp.getDoubleValue();
-                    break;
-                case Y_1: //"20"
                     x = cvp.getDoubleValue();
                     break;
+                case Y_1: //"20"
+                    y = cvp.getDoubleValue();
+                    break;
                 case X_2: //"11"
-                    y2 = cvp.getDoubleValue();
+                    x2 = cvp.getDoubleValue();
                     rotation = Double.NaN;
                     break;
                 case Y_2: //"21"
-                    x2 = cvp.getDoubleValue();
+                    y2 = cvp.getDoubleValue();
                     rotation = Double.NaN;
                     break;                    
                 case TEXT_OR_NAME_2: //"3"
-                    value += cvp.getStringValue();
+                    String temp = cvp.getStringValue();
+                    temp = cvp.getStringValue();
+                    if (temp.startsWith("{") && temp.endsWith("}") && temp.contains("|")) {
+                        temp = temp.substring(1, temp.length() - 1);
+                        temp.substring(temp.lastIndexOf('|'));
+                    }
+                    temp = temp.replace("\\P", "\n");
+                    temp = processText(temp);
+                    temp = processText2(temp);
+                    value += temp;
                     break;
                 case TEXT: //"1"                    
                     value += cvp.getStringValue();
@@ -156,7 +165,7 @@ public class DXFMText extends DXFText {
             if (Double.isNaN(x2) || Double.isNaN(y2))
                 rotation = 0;
             else
-                rotation = Math.toDegrees(Math.atan2(x2, y2));
+                rotation = Math.toDegrees(Math.atan2(y2, x2));
         }
         
         DXFMText e = new DXFMText(x, y, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);

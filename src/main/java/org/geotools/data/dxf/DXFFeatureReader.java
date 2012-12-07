@@ -3,8 +3,6 @@
  */
 package org.geotools.data.dxf;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.geotools.data.dxf.parser.DXFParseException;
 import com.vividsolutions.jts.geom.Geometry;
 import java.awt.Color;
@@ -104,8 +102,8 @@ public class DXFFeatureReader implements FeatureReader {
 
             // Affine transform the extents
             if (transform != null && theUnivers.getHeader() != null && theUnivers.getHeader()._EXTMIN != null && theUnivers.getHeader()._EXTMAX != null) {
-                double[] extents = new double[]{theUnivers.getHeader()._EXTMIN.Y(), theUnivers.getHeader()._EXTMIN.X(),
-                    theUnivers.getHeader()._EXTMAX.Y(), theUnivers.getHeader()._EXTMAX.X()};
+                double[] extents = new double[]{theUnivers.getHeader()._EXTMIN.X(), theUnivers.getHeader()._EXTMIN.Y(),
+                    theUnivers.getHeader()._EXTMAX.X(), theUnivers.getHeader()._EXTMAX.Y()};
                 transform.transform(extents, 0, extents, 0, 2);
                 minX = extents[1];
                 minY = extents[0];
@@ -178,7 +176,7 @@ public class DXFFeatureReader implements FeatureReader {
             }
 
             //CRSAuthorityFactory factory = ReferencingFactoryFinder.getCRSAuthorityFactory(authority, null); // new Hints(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.TRUE));
-            crs = CRS.decode(srs);//factory.createProjectedCRS(srs);
+            crs = CRS.decode(srs, true);//factory.createProjectedCRS(srs);
         } catch (Exception e) {
             throw new DataSourceException("Error parsing CoordinateSystem srs: \"" + srs + "\"");
         }

@@ -58,7 +58,7 @@ public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
      * @return true if srs can be resolved
      */
     public boolean canProcess(String srs) throws NoSuchAuthorityCodeException, FactoryException {
-        return CRS.decode(srs) != null;
+        return CRS.decode(srs, true) != null;
     }
 
     /**

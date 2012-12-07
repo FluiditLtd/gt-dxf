@@ -92,13 +92,22 @@ public class DXFText extends DXFEntity {
                     doLoop = false;
                     break;
                 case X_1: //"10"
-                    y = cvp.getDoubleValue();
-                    break;
-                case Y_1: //"20"
                     x = cvp.getDoubleValue();
                     break;
+                case Y_1: //"20"
+                    y = cvp.getDoubleValue();
+                    break;
                 case TEXT_OR_NAME_2: //"3"
-                    value += cvp.getStringValue();
+                    String temp = cvp.getStringValue();
+                    temp = cvp.getStringValue();
+                    if (temp.startsWith("{") && temp.endsWith("}") && temp.contains("|")) {
+                        temp = temp.substring(1, temp.length() - 1);
+                        temp.substring(temp.lastIndexOf('|'));
+                    }
+                    temp = temp.replace("\\P", "\n");
+                    temp = processText(temp);
+                    temp = processText2(temp);
+                    value += temp;
                     break;
                 case TEXT: //"1"
                     value = cvp.getStringValue();

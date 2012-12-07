@@ -70,13 +70,14 @@ public class DXFInsert extends DXFBlockReference {
                     nomBlock = cvp.getStringValue();
                     break;
                 case X_1: //"10"
-                    y = cvp.getDoubleValue();
-                    break;
-                case Y_1: //"20"
                     x = cvp.getDoubleValue();
                     break;
+                case Y_1: //"20"
+                    y = cvp.getDoubleValue();
+                    break;
                 case ANGLE_1: //"20"
-                    angle = 360d - cvp.getDoubleValue();
+                    //angle = 360d - cvp.getDoubleValue();
+                    angle = cvp.getDoubleValue();
                     break;
                 case DOUBLE_2: // 41
                     xscale = cvp.getDoubleValue();

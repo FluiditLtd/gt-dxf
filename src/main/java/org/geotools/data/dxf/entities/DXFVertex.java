@@ -60,10 +60,10 @@ public class DXFVertex extends DXFPoint {
                     b = cvp.getDoubleValue();
                     break;
                 case X_1: //"10"
-                    y = cvp.getDoubleValue();
+                    x = cvp.getDoubleValue();
                     break;
                 case Y_1: //"20"
-                    x = cvp.getDoubleValue();
+                    y = cvp.getDoubleValue();
                     break;
                 case COLOR: //"62"
                     c = cvp.getShortValue();

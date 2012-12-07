@@ -160,11 +160,11 @@ public class DXFLeader extends DXFEntity {
                         doLoop = false;
                         break;
                     }
-                    y = cvp.getDoubleValue();
+                    x = cvp.getDoubleValue();
                     xFound = true;
                     break;
                 case Y_1: //"20"
-                    x = cvp.getDoubleValue();
+                    y = cvp.getDoubleValue();
                     yFound = true;
                     break;
                 case DOUBLE_3: //"42"

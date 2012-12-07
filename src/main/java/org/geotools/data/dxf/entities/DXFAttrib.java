@@ -64,10 +64,10 @@ public class DXFAttrib extends DXFText {
                     doLoop = false;
                     break;
                 case X_1: //"10"
-                    y = cvp.getDoubleValue();
+                    x = cvp.getDoubleValue();
                     break;
                 case Y_1: //"20"
-                    x = cvp.getDoubleValue();
+                    y = cvp.getDoubleValue();
                     break;
                 case TEXT: //"1"
                     value = cvp.getStringValue();

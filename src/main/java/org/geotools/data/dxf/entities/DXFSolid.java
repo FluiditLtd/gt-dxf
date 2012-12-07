@@ -81,28 +81,28 @@ public class DXFSolid extends DXFEntity {
                     doLoop = false;
                     break;
                 case X_1: //"10"
-                    p1_y = cvp.getDoubleValue();
-                    break;
-                case X_2: //"11"
-                    p2_y = cvp.getDoubleValue();
-                    break;
-                case X_3: //"12"
-                    p3_y = cvp.getDoubleValue();
-                    break;
-                case X_4: //"13"
-                    p4_y = cvp.getDoubleValue();
-                    break;
-                case Y_1: //"20"
                     p1_x = cvp.getDoubleValue();
                     break;
-                case Y_2: //"21"
+                case X_2: //"11"
                     p2_x = cvp.getDoubleValue();
                     break;
-                case Y_3: //"22"
+                case X_3: //"12"
                     p3_x = cvp.getDoubleValue();
                     break;
-                case Y_4: //"23"
+                case X_4: //"13"
                     p4_x = cvp.getDoubleValue();
+                    break;
+                case Y_1: //"20"
+                    p1_y = cvp.getDoubleValue();
+                    break;
+                case Y_2: //"21"
+                    p2_y = cvp.getDoubleValue();
+                    break;
+                case Y_3: //"22"
+                    p3_y = cvp.getDoubleValue();
+                    break;
+                case Y_4: //"23"
+                    p4_y = cvp.getDoubleValue();
                     break;
                 case THICKNESS: //"39"
                     thickness = cvp.getDoubleValue();

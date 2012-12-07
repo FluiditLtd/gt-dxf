@@ -98,16 +98,16 @@ public class DXFEllipse extends DXFEntity {
                     e = cvp.getDoubleValue();
                     break;
                 case X_1: //"10"
-                    y = cvp.getDoubleValue();
-                    break;
-                case Y_1: //"20"
                     x = cvp.getDoubleValue();
                     break;
+                case Y_1: //"20"
+                    y = cvp.getDoubleValue();
+                    break;
                 case X_2: //"11"
-                    y1 = cvp.getDoubleValue();
+                    x1 = cvp.getDoubleValue();
                     break;
                 case Y_2: //"21"
-                    x1 = cvp.getDoubleValue();
+                    y1 = cvp.getDoubleValue();
                     break;
                 default:
                     break;

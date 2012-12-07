@@ -81,10 +81,10 @@ public class DXFDimension extends DXFBlockReference {
                     lineType = univers.findLType(cvp.getStringValue());
                     break;
                 case X_1: //"10"
-                    y = cvp.getDoubleValue();
+                    x = cvp.getDoubleValue();
                     break;
                 case Y_1: //"20"
-                    x = cvp.getDoubleValue();
+                    y = cvp.getDoubleValue();
                     break;
                 case VISIBILITY: //"60"
                     visibility = cvp.getShortValue();

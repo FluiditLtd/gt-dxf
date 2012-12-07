@@ -93,10 +93,10 @@ public class DXFArc extends DXFEntity {
                     r = cvp.getDoubleValue();
                     break;
                 case X_1: //"10"
-                    y = cvp.getDoubleValue();
+                    x = cvp.getDoubleValue();
                     break;
                 case Y_1: //"20"
-                    x = cvp.getDoubleValue();
+                    y = cvp.getDoubleValue();
                     break;
                 case ANGLE_1: //"50"
                     a1 = cvp.getDoubleValue();

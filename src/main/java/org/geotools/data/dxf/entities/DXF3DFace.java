@@ -66,22 +66,22 @@ public class DXF3DFace extends DXFEntity {
                     doLoop = false;
                     break;
                 case X_1: //"10"
-                    y1 = cvp.getDoubleValue();
-                    break;
-                case Y_1: //"20"
                     x1 = cvp.getDoubleValue();
                     break;
-                case X_2: //"11"
-                    y2 = cvp.getDoubleValue();
+                case Y_1: //"20"
+                    y1 = cvp.getDoubleValue();
                     break;
-                case Y_2: //"21"
+                case X_2: //"11"
                     x2 = cvp.getDoubleValue();
                     break;
+                case Y_2: //"21"
+                    y2 = cvp.getDoubleValue();
+                    break;
                 case X_3: //"12"
-                    y3 = cvp.getDoubleValue();
+                    x3 = cvp.getDoubleValue();
                     break;
                 case Y_3: //"22"
-                    x3 = cvp.getDoubleValue();
+                    y3 = cvp.getDoubleValue();
                     break;
                 case LAYER_NAME: //"8"
                     layer = univers.findLayer(cvp.getStringValue());

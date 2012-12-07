@@ -62,16 +62,16 @@ public class DXFLine extends DXFEntity {
                     doLoop = false;
                     break;
                 case X_1: //"10"
-                    y1 = cvp.getDoubleValue();
-                    break;
-                case Y_1: //"20"
                     x1 = cvp.getDoubleValue();
                     break;
+                case Y_1: //"20"
+                    y1 = cvp.getDoubleValue();
+                    break;
                 case X_2: //"11"
-                    y2 = cvp.getDoubleValue();
+                    x2 = cvp.getDoubleValue();
                     break;
                 case Y_2: //"21"
-                    x2 = cvp.getDoubleValue();
+                    y2 = cvp.getDoubleValue();
                     break;
                 case LAYER_NAME: //"8"
                     layer = univers.findLayer(cvp.getStringValue());
