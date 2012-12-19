@@ -23,8 +23,8 @@ public abstract class DXFEntity implements DXFConstants {
     protected double _thickness;
     protected int visibility = 0;
     private double _entRotationAngle = 0.0;
-    protected double _xScale = 1, _yScale = 1;
-    protected Coordinate _entBase = new Coordinate(0.0, 0.0);
+    protected double _xScale = 1, _yScale = 1, _zScale = 1;
+    protected Coordinate _entBase = new Coordinate(0.0, 0.0, 0.0);
 
     /**
      * Copy constructor.
@@ -35,6 +35,7 @@ public abstract class DXFEntity implements DXFConstants {
         this(newEntity.getColor(), newEntity.getRefLayer(), newEntity.visibility, newEntity.getLineType(), newEntity.getThickness());
         _xScale = newEntity._xScale;
         _yScale = newEntity._yScale;
+        _zScale = newEntity._zScale;
     }
 
     /**
@@ -85,9 +86,10 @@ public abstract class DXFEntity implements DXFConstants {
         return _entRotationAngle;
     }
 
-    public void setScale(double x, double y) {
+    public void setScale(double x, double y, double z) {
         _xScale = x;
         _yScale = y;
+        _zScale = z;
     }
     
     public double getXScale() {
@@ -98,7 +100,11 @@ public abstract class DXFEntity implements DXFConstants {
         return _yScale;
     }
     
-    abstract public DXFEntity translate(double x, double y);
+    public double getZScale() {
+        return _zScale;
+    }
+    
+    abstract public DXFEntity translate(double x, double y, double z);
 
     protected Coordinate rotateAndPlace(Coordinate coord) {
         Coordinate[] array = new Coordinate[1];
@@ -112,6 +118,7 @@ public abstract class DXFEntity implements DXFConstants {
             coordarray[i] = rotateCoordDegrees(coordarray[i], _entRotationAngle);
             coordarray[i].x = _xScale * coordarray[i].x + _entBase.x;
             coordarray[i].y = _yScale * coordarray[i].y + _entBase.y;
+            coordarray[i].z = _zScale * coordarray[i].z + _entBase.z;
         }
         return coordarray;
     }

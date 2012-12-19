@@ -16,38 +16,38 @@ import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFParseException;
 
 public class DXFPoint extends DXFEntity {
-    public Point2D.Double _point = new Point2D.Double(0, 0);
+    public Point _point = new Point(0, 0, 0);
 
     public DXFPoint(DXFPoint newPoint) {
-        this(newPoint._point.x, newPoint._point.y, newPoint.getColor(), newPoint.getRefLayer(), newPoint.visibility, newPoint.getThickness());
+        this(newPoint._point.x, newPoint._point.y, newPoint._point.z, newPoint.getColor(), newPoint.getRefLayer(), newPoint.visibility, newPoint.getThickness());
 
         setType(newPoint.getType());
         setUnivers(newPoint.getUnivers());
     }
 
-    public DXFPoint(Point2D.Double p, int color, DXFLayer layer, int visibility, float thickness) {
+    public DXFPoint(Point p, int color, DXFLayer layer, int visibility, float thickness) {
         super(color, layer, visibility, null, thickness);
         if (p == null) {
-            p = new Point2D.Double(0, 0);
+            p = new Point(0, 0, 0);
         }
-        _point = new Point2D.Double(p.x, p.y);
+        _point = new Point(p.x, p.y, p.y);
     }
 
-    public DXFPoint(Point2D.Double p) {
+    public DXFPoint(Point p) {
         super(-1, null, 0, null, DXFTables.defaultThickness);
         if (p == null) {
-            p = new Point2D.Double(0, 0);
+            p = new Point(0, 0, 0);
         }
-        _point = new Point2D.Double(p.x, p.y);
+        _point = new Point(p.x, p.y, p.z);
     }
 
     public DXFPoint() {
         super(-1, null, 0, null, DXFTables.defaultThickness);
     }
 
-    public DXFPoint(double x, double y, int color, DXFLayer layer, int visibility, double thickness) {
+    public DXFPoint(double x, double y, double z, int color, DXFLayer layer, int visibility, double thickness) {
         super(color, layer, visibility, null, DXFTables.defaultThickness);
-        _point = new Point2D.Double(x, y);
+        _point = new Point(x, y, z);
     }
 
     public void setX(double x) {
@@ -58,6 +58,10 @@ public class DXFPoint extends DXFEntity {
         _point.y = y;
     }
 
+    public void setZ(double z) {
+        _point.z = z;
+    }
+
     public double X() {
         return _point.getX();
     }
@@ -66,10 +70,14 @@ public class DXFPoint extends DXFEntity {
         return _point.getY();
     }
 
+    public double Z() {
+        return _point.getZ();
+    }
+
     public static DXFPoint read(DXFLineNumberReader br, DXFUnivers univers) throws NumberFormatException, IOException {
         DXFLayer layer = null;
         int visibility = 0, color = -1;
-        double x = 0, y = 0, thickness = 0;
+        double x = 0, y = 0, z = 0, thickness = 0;
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
@@ -102,6 +110,9 @@ public class DXFPoint extends DXFEntity {
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
                     break;
+                case Z_1: //"30"
+                    z = cvp.getDoubleValue();
+                    break;
                 case COLOR: //"62"
                     color = cvp.getShortValue();
                     break;
@@ -116,7 +127,7 @@ public class DXFPoint extends DXFEntity {
             }
         }
 
-        DXFPoint e = new DXFPoint(x, y, color, layer, visibility, thickness);
+        DXFPoint e = new DXFPoint(x, y, z, color, layer, visibility, thickness);
         e.setType(GeometryType.POINT);
         e.setUnivers(univers);
         return e;
@@ -162,9 +173,10 @@ public class DXFPoint extends DXFEntity {
     }
 
     @Override
-    public DXFEntity translate(double x, double y) {
+    public DXFEntity translate(double x, double y, double z) {
         _point.x += x;
         _point.y += y;
+        _point.z += z;
 
         return this;
     }
