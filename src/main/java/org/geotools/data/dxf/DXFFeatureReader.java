@@ -3,6 +3,7 @@
  */
 package org.geotools.data.dxf;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import org.geotools.data.dxf.parser.DXFParseException;
 import com.vividsolutions.jts.geom.Geometry;
 import java.awt.Color;
@@ -105,10 +106,10 @@ public class DXFFeatureReader implements FeatureReader {
                 double[] extents = new double[]{theUnivers.getHeader()._EXTMIN.X(), theUnivers.getHeader()._EXTMIN.Y(),
                     theUnivers.getHeader()._EXTMAX.X(), theUnivers.getHeader()._EXTMAX.Y()};
                 transform.transform(extents, 0, extents, 0, 2);
-                minX = extents[1];
-                minY = extents[0];
-                maxX = extents[3];
-                maxY = extents[2];
+                minX = extents[0];
+                minY = extents[1];
+                maxX = extents[2];
+                maxY = extents[3];
             }
 
             createFeatureType(typeName, srs);
