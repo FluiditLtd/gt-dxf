@@ -32,8 +32,8 @@ public class DXFBlockRecord extends DXFBlock {
      */
 
     // TODO GJ DELETE WHOLE UNUSED CLASS???
-    public DXFBlockRecord(double x, double y, int flag, String name, Vector<DXFEntity> ent, int c, DXFLayer l) {
-        super(x, y, flag, name, ent, c, l);
+    public DXFBlockRecord(double x, double y, double z, int flag, String name, Vector<DXFEntity> ent, int c, DXFLayer l) {
+        super(x, y, z, flag, name, ent, c, l);
     /*
     _point = new DXFPoint(x, y, c, l, 0, 1);
     _name = name;
@@ -49,7 +49,7 @@ public class DXFBlockRecord extends DXFBlock {
     public static DXFBlockRecord read(DXFLineNumberReader br, DXFUnivers univers) throws IOException {
         Vector<DXFEntity> sEnt = new Vector<DXFEntity>();
         String name = "";
-        double x = 0, y = 0;
+        double x = 0, y = 0, z = 0;
         int flag = 0;
         DXFLayer l = null;
 
@@ -91,7 +91,7 @@ public class DXFBlockRecord extends DXFBlock {
                     break;
             }
         }
-        DXFBlockRecord e = new DXFBlockRecord(x, y, flag, name, sEnt, DXFColor.getDefaultColorIndex(), l);
+        DXFBlockRecord e = new DXFBlockRecord(x, y, z, flag, name, sEnt, DXFColor.getDefaultColorIndex(), l);
         return e;
     }
     /*

@@ -30,8 +30,8 @@ public class DXFEllipse extends DXFEntity {
     public double _end = 0;
 
     public DXFEllipse(DXFEllipse newEllipse) {
-        this(new DXFPoint(newEllipse._point1._point.x, newEllipse._point1._point.y, newEllipse.getColor(), null, 0, (double) newEllipse.getThickness()),
-                new DXFPoint(newEllipse._point2._point.x, newEllipse._point2._point.y, newEllipse.getColor(), null, 0, (double) newEllipse.getThickness()),
+        this(new DXFPoint(newEllipse._point1.X(), newEllipse._point1.Y(), newEllipse._point1.Z(), newEllipse.getColor(), null, 0, (double) newEllipse.getThickness()),
+                new DXFPoint(newEllipse._point2.X(), newEllipse._point2.Y(), newEllipse._point2.Z(), newEllipse.getColor(), null, 0, (double) newEllipse.getThickness()),
                 newEllipse._ratio, newEllipse._start, newEllipse._end, newEllipse.getColor(), newEllipse.getRefLayer(), newEllipse.visibility, newEllipse.getLineType());
 
         setType(newEllipse.getType());
@@ -50,7 +50,7 @@ public class DXFEllipse extends DXFEntity {
 
     public static DXFEllipse read(DXFLineNumberReader br, DXFUnivers univers) throws NumberFormatException, IOException {
         int visibility = 0, c = 0;
-        double x = 0, y = 0, x1 = 0, y1 = 0, r = 0, s = 0, e = 0;
+        double x = 0, y = 0, z = 0, x1 = 0, y1 = 0, z1 = 0, r = 0, s = 0, e = 0;
         DXFLayer l = null;
         DXFLineType lineType = null;
 
@@ -103,11 +103,17 @@ public class DXFEllipse extends DXFEntity {
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
                     break;
+                case Z_1: //"30"
+                    z = cvp.getDoubleValue();
+                    break;
                 case X_2: //"11"
                     x1 = cvp.getDoubleValue();
                     break;
                 case Y_2: //"21"
                     y1 = cvp.getDoubleValue();
+                    break;
+                case Z_2: //"31"
+                    z1 = cvp.getDoubleValue();
                     break;
                 default:
                     break;
@@ -116,8 +122,8 @@ public class DXFEllipse extends DXFEntity {
         }
         
         DXFEllipse m = new DXFEllipse(
-                new DXFPoint(x, y, c, l, visibility, 1),
-                new DXFPoint(x1, y1, c, l, visibility, 1),
+                new DXFPoint(x, y, z, c, l, visibility, 1),
+                new DXFPoint(x1, y1, z1, c, l, visibility, 1),
                 r, s, e, c, l, visibility, lineType);
         m.setType(GeometryType.POLYGON);
         m.setUnivers(univers);
@@ -180,7 +186,8 @@ public class DXFEllipse extends DXFEntity {
             double cosa = Math.cos(angle);
             Coordinate c = new Coordinate(
                     _centre.X() + (a * cosa * costh - b * sina * sinth),
-                    _centre.Y() + (a * cosa * sinth + b * sina * costh));
+                    _centre.Y() + (a * cosa * sinth + b * sina * costh),
+                    _centre.Z());
             lc.add(c);
         }
 
@@ -247,14 +254,6 @@ public class DXFEllipse extends DXFEntity {
         s.append(y1);
         s.append("]");
         return s.toString();
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        // Is Translation of centre necessary?
-        _centre._point.x += x;
-        _centre._point.y += y;
-        return this;
     }
 
     @Override

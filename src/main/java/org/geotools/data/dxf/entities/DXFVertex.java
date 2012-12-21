@@ -15,21 +15,21 @@ public class DXFVertex extends DXFPoint {
     protected double _bulge = 0;
 
     public DXFVertex(DXFVertex newVertex) {
-        this(newVertex._point.x, newVertex._point.y, newVertex._bulge, newVertex.getColor(), newVertex.getRefLayer(), newVertex.visibility);
+        this(newVertex._point.x, newVertex._point.y, newVertex._point.z, newVertex._bulge, newVertex.getColor(), newVertex.getRefLayer(), newVertex.visibility);
 
         setType(newVertex.getType());
         setUnivers(newVertex.getUnivers());
     }
 
-    public DXFVertex(double x, double y, double b, int c, DXFLayer l, int visibility) {
-        super(x, y, c, l, visibility, 1);
+    public DXFVertex(double x, double y, double z, double b, int c, DXFLayer l, int visibility) {
+        super(x, y, z, c, l, visibility, 1);
         _bulge = b;
     }
 
     public static DXFVertex read(DXFLineNumberReader br, DXFUnivers univers) throws IOException {
         DXFLayer l = null;
         int visibility = 0, c = -1;
-        double x = 0, y = 0, b = 0;
+        double x = 0, y = 0, z = 0, b = 0;
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
@@ -65,6 +65,9 @@ public class DXFVertex extends DXFPoint {
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
                     break;
+                case Z_1: //"30"
+                    z = cvp.getDoubleValue();
+                    break;
                 case COLOR: //"62"
                     c = cvp.getShortValue();
                     break;
@@ -77,7 +80,7 @@ public class DXFVertex extends DXFPoint {
 
         }
 
-        DXFVertex e = new DXFVertex(x, y, b, c, l, visibility);
+        DXFVertex e = new DXFVertex(x, y, z, b, c, l, visibility);
         e.setType(GeometryType.POINT);
         e.setUnivers(univers);
         return e;

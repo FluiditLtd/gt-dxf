@@ -20,18 +20,18 @@ public class DXFDimension extends DXFBlockReference {
     public DXFPoint _point_WCS = new DXFPoint();//10,20
 
     public DXFDimension(DXFDimension newDimension) {
-        this(newDimension._angle, newDimension._dimension, newDimension._point_WCS._point.x, newDimension._point_WCS._point.y,
+        this(newDimension._angle, newDimension._dimension, newDimension._point_WCS._point.x, newDimension._point_WCS._point.y, newDimension._point_WCS._point.z,
                 newDimension._refBlock, newDimension._blockName, newDimension.getRefLayer(), newDimension.visibility, newDimension.getColor(), newDimension.getLineType());
 
         setType(newDimension.getType());
         setUnivers(newDimension.getUnivers());
     }
 
-    public DXFDimension(double a, String dim, double x, double y, DXFBlock refBlock, String nomBlock, DXFLayer l, int visibility, int c, DXFLineType lineType) {
+    public DXFDimension(double a, String dim, double x, double y, double z, DXFBlock refBlock, String nomBlock, DXFLayer l, int visibility, int c, DXFLineType lineType) {
         super(c, l, visibility, null, nomBlock, refBlock);
         _angle = a;
         _dimension = dim;
-        _point_WCS = new DXFPoint(x, y, c, null, visibility, 1);
+        _point_WCS = new DXFPoint(x, y, z, c, null, visibility, 1);
     }
 
     public static DXFDimension read(DXFLineNumberReader br, DXFUnivers univers) throws IOException {
@@ -39,7 +39,7 @@ public class DXFDimension extends DXFBlockReference {
         DXFDimension d = null;
         DXFLayer l = null;
         DXFBlock refBlock = null;
-        double angle = 0, x = 0, y = 0;
+        double angle = 0, x = 0, y = 0, z = 0;
         int visibility = 0, c = -1;
         DXFLineType lineType = null;
 
@@ -86,6 +86,9 @@ public class DXFDimension extends DXFBlockReference {
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
                     break;
+                case Z_1: //"30"
+                    z = cvp.getDoubleValue();
+                    break;
                 case VISIBILITY: //"60"
                     visibility = cvp.getShortValue();
                     break;
@@ -97,10 +100,9 @@ public class DXFDimension extends DXFBlockReference {
             }
         }
 
-        d = new DXFDimension(angle, dimension, x, y, refBlock, nomBlock, l, visibility, c, lineType);
+        d = new DXFDimension(angle, dimension, x, y, z, refBlock, nomBlock, l, visibility, c, lineType);
         d.setType(GeometryType.UNSUPPORTED);
         d.setUnivers(univers);
-        univers.addRefBlockForUpdate(d);
 
         return d;
     }
@@ -130,13 +132,6 @@ public class DXFDimension extends DXFBlockReference {
         s.append(c);
         s.append("]");
         return s.toString();
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        _point_WCS._point.x += x;
-        _point_WCS._point.y += y;
-        return this;
     }
 
     @Override

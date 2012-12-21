@@ -22,10 +22,14 @@ public class DXFBlock extends DXFEntity implements DXFConstants {
     public DXFPoint _point = new DXFPoint();
     public String _name;
     public int _flag;
+    public double _xs, _ys, _zs;
 
     public DXFBlock(DXFBlock newBlock) {
-        this(newBlock._point.X(), newBlock._point.Y(), newBlock._flag, newBlock._name, null, newBlock.getColor(), newBlock.getRefLayer());
-
+        this(newBlock._point.X(), newBlock._point.Y(), newBlock._point.Z(), newBlock._flag, newBlock._name, null, newBlock.getColor(), newBlock.getRefLayer());
+        _xs = newBlock._xs;
+        _ys = newBlock._ys;
+        _zs = newBlock._zs;
+        
         // Copy entities
         Iterator iter = newBlock.theEntities.iterator();
         while (iter.hasNext()) {
@@ -33,9 +37,9 @@ public class DXFBlock extends DXFEntity implements DXFConstants {
         }
     }
 
-    public DXFBlock(double x, double y, int flag, String name, Vector<DXFEntity> ent, int c, DXFLayer l) {
+    public DXFBlock(double x, double y, double z, int flag, String name, Vector<DXFEntity> ent, int c, DXFLayer l) {
         super(c, l, 0, null, DXFTables.defaultThickness);
-        _point = new DXFPoint(x, y, c, l, 0, 1);
+        _point = new DXFPoint(x, y, z, c, l, 0, 1);
         _name = name;
         _flag = flag;
 
@@ -48,8 +52,8 @@ public class DXFBlock extends DXFEntity implements DXFConstants {
     public static DXFBlock read(DXFLineNumberReader br, DXFUnivers univers) throws IOException {
         Vector<DXFEntity> sEnt = new Vector<DXFEntity>();
         String name = "";
-        double x = 0, y = 0;
-        double xscale = 1, yscale = 1;
+        double x = 0, y = 0, z = 0;
+        double xscale = 1, yscale = 1, zscale = 1;
         int flag = 0;
         DXFLayer l = null;
 
@@ -80,8 +84,8 @@ public class DXFBlock extends DXFEntity implements DXFConstants {
                     } else if (type.equals(BLOCK)) {
                         doLoop = false;
                         br.reset();
-                    } else if (type.equals(INSERT)) {
-                        DXFInsert.read(br, univers);
+                    //} else if (type.equals(INSERT)) {
+                    //    DXFInsert.read(br, univers);
                     } else {
                         // check of dit entities zijn
                         br.reset();
@@ -103,19 +107,27 @@ public class DXFBlock extends DXFEntity implements DXFConstants {
                 case Y_1:
                     y = cvp.getDoubleValue();
                     break;
+                case Z_1:
+                    z = cvp.getDoubleValue();
+                    break;
                 case DOUBLE_2:
                     xscale = cvp.getDoubleValue();
                     break;
                 case DOUBLE_3:
                     yscale = cvp.getDoubleValue();
                     break;
+                case DOUBLE_4:
+                    zscale = cvp.getDoubleValue();
+                    break;
                 default:
                     break;
             }
         }
         
-        DXFBlock e = new DXFBlock(x, y, flag, name, sEnt, DXFColor.getDefaultColorIndex(), l);
-        e.setScale(xscale, yscale);
+        DXFBlock e = new DXFBlock(x, y, z, flag, name, sEnt, DXFColor.getDefaultColorIndex(), l);
+        e._xs = xscale;
+        e._ys = yscale;
+        e._zs = zscale;
         return e;
     }
 
@@ -136,17 +148,6 @@ public class DXFBlock extends DXFEntity implements DXFConstants {
         s.append(numEntities);
         s.append("]");
         return s.toString();
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        // Move all vertices
-        Iterator iter = theEntities.iterator();
-        while (iter.hasNext()) {
-            DXFEntity entity = (DXFEntity) iter.next();
-            entity.translate(x, y);
-        }
-        return this;
     }
 
     public DXFEntity clone() {

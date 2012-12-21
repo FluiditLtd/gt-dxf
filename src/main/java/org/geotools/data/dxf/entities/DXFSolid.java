@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
 import org.geotools.data.dxf.header.DXFLayer;
@@ -26,10 +25,10 @@ public class DXFSolid extends DXFEntity {
     public DXFPoint _p4 = null;
 
     public DXFSolid(DXFSolid newSolid) {
-        this(new DXFPoint(newSolid._p1._point.x, newSolid._p1._point.y, newSolid.getColor(), null, 0, newSolid.getThickness()),
-                new DXFPoint(newSolid._p2._point.x, newSolid._p2._point.y, newSolid.getColor(), null, 0, newSolid.getThickness()),
-                new DXFPoint(newSolid._p3._point.x, newSolid._p3._point.y, newSolid.getColor(), null, 0, newSolid.getThickness()),
-                new DXFPoint(newSolid._p4._point.x, newSolid._p4._point.y, newSolid.getColor(), null, 0, newSolid.getThickness()),
+        this(new DXFPoint(newSolid._p1.X(), newSolid._p1.Y(), newSolid._p4.Z(), newSolid.getColor(), null, 0, newSolid.getThickness()),
+                new DXFPoint(newSolid._p2.X(), newSolid._p2.Y(), newSolid._p4.Z(), newSolid.getColor(), null, 0, newSolid.getThickness()),
+                new DXFPoint(newSolid._p3.X(), newSolid._p3.Y(), newSolid._p4.Z(), newSolid.getColor(), null, 0, newSolid.getThickness()),
+                new DXFPoint(newSolid._p4.X(), newSolid._p4.Y(), newSolid._p4.Z(), newSolid.getColor(), null, 0, newSolid.getThickness()),
                 newSolid.getThickness(), newSolid.getColor(), newSolid.getRefLayer(), newSolid.visibility, newSolid.getLineType());
 
         setType(newSolid.getType());
@@ -52,7 +51,9 @@ public class DXFSolid extends DXFEntity {
     }
 
     public static DXFEntity read(DXFLineNumberReader br, DXFUnivers univers) throws IOException {
-        double p1_x = 0, p2_x = 0, p3_x = 0, p4_x = 0, p1_y = 0, p2_y = 0, p3_y = 0, p4_y = 0;
+        double p1_x = 0, p2_x = 0, p3_x = 0, p4_x = 0,
+                p1_y = 0, p2_y = 0, p3_y = 0, p4_y = 0,
+                p1_z = 0, p2_z = 0, p3_z = 0, p4_z = 0;
         double thickness = 0;
         int visibility = 0, c = -1;
         DXFLayer l = null;
@@ -104,6 +105,18 @@ public class DXFSolid extends DXFEntity {
                 case Y_4: //"23"
                     p4_y = cvp.getDoubleValue();
                     break;
+                case Z_1: //"20"
+                    p1_z = cvp.getDoubleValue();
+                    break;
+                case Z_2: //"21"
+                    p2_z = cvp.getDoubleValue();
+                    break;
+                case Z_3: //"22"
+                    p3_z = cvp.getDoubleValue();
+                    break;
+                case Z_4: //"23"
+                    p4_z = cvp.getDoubleValue();
+                    break;
                 case THICKNESS: //"39"
                     thickness = cvp.getDoubleValue();
                     break;
@@ -125,10 +138,10 @@ public class DXFSolid extends DXFEntity {
 
         }
         DXFSolid e = new DXFSolid(
-                new DXFPoint(p1_x, p1_y, c, null, visibility, 1),
-                new DXFPoint(p2_x, p2_y, c, null, visibility, 1),
-                new DXFPoint(p3_x, p3_y, c, null, visibility, 1),
-                new DXFPoint(p4_x, p4_y, c, null, visibility, 1),
+                new DXFPoint(p1_x, p1_y, p1_z, c, null, visibility, 1),
+                new DXFPoint(p2_x, p2_y, p2_z, c, null, visibility, 1),
+                new DXFPoint(p3_x, p3_y, p3_z, c, null, visibility, 1),
+                new DXFPoint(p4_x, p4_y, p4_z, c, null, visibility, 1),
                 thickness,
                 c,
                 l,
@@ -211,23 +224,6 @@ public class DXFSolid extends DXFEntity {
         s.append(visibility);
         s.append("]");
         return s.toString();
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        _p1._point.x += x;
-        _p1._point.y += y;
-
-        _p2._point.x += x;
-        _p2._point.y += y;
-
-        _p3._point.x += x;
-        _p3._point.y += y;
-
-        _p4._point.x += x;
-        _p4._point.y += y;
-
-        return this;
     }
 
     @Override

@@ -19,18 +19,18 @@ public class DXFLwVertex extends DXFPoint {
      */
     double _bulge;
 
-    public DXFLwVertex(Point2D.Double p, double bulge) {
+    public DXFLwVertex(Point p, double bulge) {
         super(p);
         this._bulge = bulge;
     }
 
-    public DXFLwVertex(double x, double y, double bulge) {
-        super(new Point2D.Double(x, y));
+    public DXFLwVertex(double x, double y, double z, double bulge) {
+        super(new Point(x, y, z));
         this._bulge = bulge;
     }
 
     public DXFLwVertex(DXFLwVertex orig, boolean bis) {
-        super(orig._point.x, orig._point.y, orig.getColor(), orig.getRefLayer(), 0, 1);
+        super(orig._point.x, orig._point.y, orig._point.z, orig.getColor(), orig.getRefLayer(), 0, 1);
         _bulge = orig._bulge;
     }
 

@@ -1,8 +1,10 @@
 package org.geotools.data.dxf.entities;
 
+import java.awt.geom.AffineTransform;
 import java.io.EOFException;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import java.io.IOException;
+import java.util.List;
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
 import org.geotools.data.dxf.header.DXFBlock;
@@ -12,22 +14,23 @@ import org.geotools.data.dxf.header.DXFLineType;
 import org.geotools.data.dxf.parser.DXFCodeValuePair;
 import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFParseException;
+import org.geotools.referencing.operation.transform.AffineTransform2D;
 
 public class DXFInsert extends DXFBlockReference {
     public DXFPoint _point = new DXFPoint();
     public double _angle = 0.0;
-    public double _xs = 1, _ys = 1;
+    public double _xs = 1, _ys = 1, _zs = 1;
 
     public DXFInsert(DXFInsert newInsert) {
-        this(newInsert._point._point.x, newInsert._point._point.y, newInsert._blockName, newInsert._refBlock, newInsert.getRefLayer(), newInsert.visibility, newInsert.getColor(), newInsert.getLineType(), newInsert._angle);
+        this(newInsert._point.X(), newInsert._point.Y(), newInsert._point.Z(), newInsert._blockName, newInsert._refBlock, newInsert.getRefLayer(), newInsert.visibility, newInsert.getColor(), newInsert.getLineType(), newInsert._angle);
 
         setType(newInsert.getType());
         setUnivers(newInsert.getUnivers());
     }
 
-    public DXFInsert(double x, double y, String nomBlock, DXFBlock refBlock, DXFLayer layer, int visibility, int color, DXFLineType lineType, double angle) {
+    public DXFInsert(double x, double y, double z, String nomBlock, DXFBlock refBlock, DXFLayer layer, int visibility, int color, DXFLineType lineType, double angle) {
         super(color, layer, visibility, lineType, nomBlock, refBlock);
-        _point = new DXFPoint(x, y, color, null, visibility, 1);
+        _point = new DXFPoint(x, y, z, color, null, visibility, 1);
         _angle = angle;
     }
 
@@ -35,7 +38,7 @@ public class DXFInsert extends DXFBlockReference {
         String nomBlock = "";
         DXFInsert m = null;
         DXFLayer layer = null;
-        double x = 0, y = 0, xscale = 1, yscale = 1;
+        double x = 0, y = 0, z = 0, xscale = 1, yscale = 1, zscale = 1;
         int visibility = 0, color = -1;
         DXFBlock refBlock = null;
         DXFLineType lineType = null;
@@ -75,6 +78,9 @@ public class DXFInsert extends DXFBlockReference {
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
                     break;
+                case Z_1: //"20"
+                    z = cvp.getDoubleValue();
+                    break;
                 case ANGLE_1: //"20"
                     //angle = 360d - cvp.getDoubleValue();
                     angle = cvp.getDoubleValue();
@@ -84,6 +90,9 @@ public class DXFInsert extends DXFBlockReference {
                     break;
                 case DOUBLE_3: // 42
                     yscale = cvp.getDoubleValue();
+                    break;
+                case DOUBLE_4: // 43
+                    zscale = cvp.getDoubleValue();
                     break;
                 case COLOR: //"62"
                     color = cvp.getShortValue();
@@ -99,17 +108,35 @@ public class DXFInsert extends DXFBlockReference {
             }
         }
 
-        m = new DXFInsert(x, y, nomBlock, refBlock, layer, visibility, color, lineType, angle);
+        m = new DXFInsert(x, y, z, nomBlock, refBlock, layer, visibility, color, lineType, angle);
         m.setType(GeometryType.POINT);
         m.setUnivers(univers);
         m._xs = xscale;
         m._ys = yscale;
-
-        univers.addRefBlockForUpdate(m);
+        m._zs = zscale;
 
         return m;
     }
 
+    public AffineTransform2D getTransform(AffineTransform2D at) {
+        AffineTransform copy = new AffineTransform();
+        copy.translate(_point.X(), _point.Y());
+        copy.scale(_xs, _ys);
+        copy.rotate(Math.toRadians(_angle));
+        
+        DXFBlock block = univers.findBlock(_blockName);
+        copy.translate(block._point.X(), block._point.Y());
+        copy.scale(block._xs, block._ys);
+        
+        copy.preConcatenate(at);
+        
+        return new AffineTransform2D(copy);
+    }
+    
+    public List<DXFEntity> getChildren() {
+        return univers.findBlock(_blockName).theEntities;
+    }
+    
     public String toString(double x, double y, int visibility, int c, DXFLineType lineType) {
         StringBuilder s = new StringBuilder();
         s.append("DXFInsert [");
@@ -127,14 +154,6 @@ public class DXFInsert extends DXFBlockReference {
         }
         s.append("]");
         return s.toString();
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        _point._point.x += x;
-        _point._point.y += y;
-
-        return this;
     }
 
     @Override

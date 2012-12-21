@@ -32,7 +32,7 @@ public class DXFText extends DXFEntity {
     public Rectangle2D.Double _r = new Rectangle2D.Double();
 
     public DXFText(DXFText newText) {
-        this(newText._point._point.x, newText._point._point.y, newText._value,
+        this(newText._point.X(), newText._point.Y(), newText._point.Z(), newText._value,
                 newText._rotation, newText.getThickness(), newText._height,
                 newText._align, newText._align2, newText._style, newText.getColor(),
                 newText.getRefLayer(), newText._angle, newText._zoomfactor,
@@ -42,9 +42,9 @@ public class DXFText extends DXFEntity {
         setUnivers(newText.getUnivers());
     }
 
-    public DXFText(double x, double y, String value, double rotation, double thickness, double height, float align, float align2, String style, int color, DXFLayer l, double angle, double zoomFactor, int visibility, DXFLineType lineType) {
+    public DXFText(double x, double y, double z, String value, double rotation, double thickness, double height, float align, float align2, String style, int color, DXFLayer l, double angle, double zoomFactor, int visibility, DXFLineType lineType) {
         super(color, l, visibility, lineType, thickness);
-        _point = new DXFPoint(x, y, color, l, visibility, thickness);
+        _point = new DXFPoint(x, y, z, color, l, visibility, thickness);
         _value = value;
         _rotation = rotation;
         _height = height;
@@ -63,6 +63,7 @@ public class DXFText extends DXFEntity {
         DXFLineType lineType = null;
         double x = 0,
                 y = 0,
+                z = 0,
                 angle = 0,
                 rotation = 0,
                 zoomfactor = 1,
@@ -96,6 +97,9 @@ public class DXFText extends DXFEntity {
                     break;
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
+                    break;
+                case Z_1: //"30"
+                    z = cvp.getDoubleValue();
                     break;
                 case TEXT_OR_NAME_2: //"3"
                     String temp = cvp.getStringValue();
@@ -174,7 +178,7 @@ public class DXFText extends DXFEntity {
         align /= 2f;
         align2 /= 2f;
         
-        DXFText e = new DXFText(x, y, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
+        DXFText e = new DXFText(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
         e.setType(GeometryType.POINT);
         e.setUnivers(univers);
         return e;
@@ -263,13 +267,6 @@ public class DXFText extends DXFEntity {
         s.append(visibility);
         s.append("]");
         return s.toString();
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        _point._point.x += x;
-        _point._point.y += y;
-        return this;
     }
 
     @Override

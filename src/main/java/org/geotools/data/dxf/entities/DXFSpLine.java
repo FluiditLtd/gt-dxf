@@ -62,10 +62,16 @@ public class DXFSpLine extends DXFPolyline {
                     break;
                 case X_1:
                     double x = cvp.getDoubleValue();
-                    lv.add(new DXFVertex(x, -1, 1, c, l, visibility));
+                    lv.add(new DXFVertex(x, -1, -1, 1, c, l, visibility));
                 case Y_1:
                     int lastIndex = lv.size() - 1;
                     DXFVertex lastCoord = lv.get(lastIndex);
+                    lastCoord.setY(cvp.getDoubleValue());
+                    lv.set(lastIndex, lastCoord);
+                    break;
+                case Z_1:
+                    lastIndex = lv.size() - 1;
+                    lastCoord = lv.get(lastIndex);
                     lastCoord.setY(cvp.getDoubleValue());
                     lv.set(lastIndex, lastCoord);
                     break;

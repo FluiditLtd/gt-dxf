@@ -15,15 +15,15 @@ import org.geotools.data.dxf.parser.DXFParseException;
 
 public class DXFAttrib extends DXFText {
     public DXFAttrib(DXFAttrib newAttrib) {
-        this(newAttrib._point._point.x, newAttrib._point._point.y, newAttrib._value, newAttrib._rotation, newAttrib.getThickness(), newAttrib._height,
+        this(newAttrib._point.X(), newAttrib._point.Y(), newAttrib._point.Z(), newAttrib._value, newAttrib._rotation, newAttrib.getThickness(), newAttrib._height,
                 newAttrib._align, newAttrib._align2, newAttrib._style, newAttrib.getColor(), newAttrib.getRefLayer(), newAttrib._angle, newAttrib._zoomfactor, newAttrib.visibility, newAttrib.getLineType());
 
         setType(newAttrib.getType());
         setUnivers(newAttrib.getUnivers());
     }
 
-    public DXFAttrib(double x, double y, String value, double rotation, double thickness, double height, float align, float align2, String style, int color, DXFLayer layer, double angle, double zoomFactor, int visibility, DXFLineType lineType) {
-        super(x, y, value, rotation, thickness, height, align, align2, style, color, layer, angle, zoomFactor, visibility, lineType);
+    public DXFAttrib(double x, double y, double z, String value, double rotation, double thickness, double height, float align, float align2, String style, int color, DXFLayer layer, double angle, double zoomFactor, int visibility, DXFLineType lineType) {
+        super(x, y, z, value, rotation, thickness, height, align, align2, style, color, layer, angle, zoomFactor, visibility, lineType);
     }
 
     public static DXFAttrib readAttrib(DXFLineNumberReader br, DXFUnivers univers) throws IOException {
@@ -35,6 +35,7 @@ public class DXFAttrib extends DXFText {
         DXFLineType lineType = null;
         double x = 0,
                 y = 0,
+                z = 0,
                 angle = 0,
                 rotation = 0,
                 zoomfactor = 1,
@@ -68,6 +69,9 @@ public class DXFAttrib extends DXFText {
                     break;
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
+                    break;
+                case Z_1: //"30"
+                    z = cvp.getDoubleValue();
                     break;
                 case TEXT: //"1"
                     value = cvp.getStringValue();
@@ -141,18 +145,10 @@ public class DXFAttrib extends DXFText {
             visibility = 1;
         //System.out.println(String.format("%d %d %s", visibility, flag, value));
         
-        DXFAttrib e = new DXFAttrib(x, y, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
+        DXFAttrib e = new DXFAttrib(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
         e.setType(GeometryType.POINT);
         e.setUnivers(univers);
         return e;
-    }
-    
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        _point._point.x += x;
-        _point._point.y += y;
-        return this;
     }
 
     @Override

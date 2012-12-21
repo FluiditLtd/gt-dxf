@@ -31,8 +31,9 @@ public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
     private static final Log log = LogFactory.getLog(DXFDataStoreFactory.class);
 
     public static final DataStoreFactorySpi.Param PARAM_URL = new Param("url", URL.class, "url to a .dxf file");    
-    public static final DataStoreFactorySpi.Param PARAM_SRS = new Param("srs", String.class, "override srs");    
-    public static final DataStoreFactorySpi.Param PARAM_AFFINE_TRANSFORM = new Param("transform", AffineTransform.class, "affine transform performed to the geometries");    
+    public static final DataStoreFactorySpi.Param PARAM_SRS = new Param("srs", String.class, "srs for the .dxf file");    
+    public static final DataStoreFactorySpi.Param PARAM_TARGET_SRS = new Param("target srs", String.class, "target srs; optional; used for converting text rotation angles");    
+    public static final DataStoreFactorySpi.Param PARAM_AFFINE_TRANSFORM = new Param("transform", AffineTransform.class, "affine transform performed to the geometries");
     
     public String getDisplayName() {
         return "DXF File";
@@ -71,7 +72,7 @@ public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
                 URL url = (URL)PARAM_URL.lookUp(params);
                 result = canProcess(url);
             } catch (IOException ioe) {
-                /* return false on any exception */
+                result = false;
             }
         }
         if (result && params.containsKey(PARAM_SRS.key)) {
@@ -79,11 +80,26 @@ public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
                 String srs = (String) PARAM_SRS.lookUp(params);
                 result = canProcess(srs);
             } catch (NoSuchAuthorityCodeException ex) {
-                /* return false on any exception */
+                result = false;
             } catch (FactoryException ex) {
-                /* return false on any exception */
+                result = false;
             } catch (IOException ioe) {
-                /* return false on any exception */
+                result = false;
+            }
+        }
+        else
+            result = false;
+        
+        if (result && params.containsKey(PARAM_TARGET_SRS.key)) {
+            try {
+                String srs = (String) PARAM_TARGET_SRS.lookUp(params);
+                result = canProcess(srs);
+            } catch (NoSuchAuthorityCodeException ex) {
+                result = false;
+            } catch (FactoryException ex) {
+                result = false;
+            } catch (IOException ioe) {
+                result = false;
             }
         }
         return result;
@@ -97,7 +113,7 @@ public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
     }
 
     public Param[] getParametersInfo() {
-        return new Param[] {PARAM_URL, PARAM_SRS, PARAM_AFFINE_TRANSFORM};
+        return new Param[] {PARAM_URL, PARAM_SRS, PARAM_TARGET_SRS, PARAM_AFFINE_TRANSFORM};
     }
 
     public Map getImplementationHints() {
@@ -125,7 +141,7 @@ public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
         if(!canProcess(params)) {
             throw new FileNotFoundException( "DXF file not found: " + params);
         }
-        return new DXFDataStore((URL)params.get(PARAM_URL.key), (String)params.get(PARAM_SRS.key), (AffineTransform)params.get(PARAM_AFFINE_TRANSFORM.key));
+        return new DXFDataStore((URL)params.get(PARAM_URL.key), (String)params.get(PARAM_SRS.key), (String)params.get(PARAM_TARGET_SRS.key), (AffineTransform)params.get(PARAM_AFFINE_TRANSFORM.key));
     }
 
     public DataStore createNewDataStore(Map params) throws IOException {

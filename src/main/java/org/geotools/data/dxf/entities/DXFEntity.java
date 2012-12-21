@@ -22,9 +22,6 @@ public abstract class DXFEntity implements DXFConstants {
     protected DXFLayer _refLayer;
     protected double _thickness;
     protected int visibility = 0;
-    private double _entRotationAngle = 0.0;
-    protected double _xScale = 1, _yScale = 1, _zScale = 1;
-    protected Coordinate _entBase = new Coordinate(0.0, 0.0, 0.0);
 
     /**
      * Copy constructor.
@@ -33,9 +30,6 @@ public abstract class DXFEntity implements DXFConstants {
      */
     public DXFEntity(DXFEntity newEntity) {
         this(newEntity.getColor(), newEntity.getRefLayer(), newEntity.visibility, newEntity.getLineType(), newEntity.getThickness());
-        _xScale = newEntity._xScale;
-        _yScale = newEntity._yScale;
-        _zScale = newEntity._zScale;
     }
 
     /**
@@ -69,43 +63,7 @@ public abstract class DXFEntity implements DXFConstants {
         _thickness = thickness;
         this.visibility = visibility;
     }
-
-    public void setBase(Coordinate coord) {
-        this._entBase = coord;
-    }
-
-    public Coordinate getBase() {
-        return _entBase;        
-    }
     
-    public void setAngle(double angle) {
-        this._entRotationAngle = angle;
-    }
-    
-    public double getAngle() {
-        return _entRotationAngle;
-    }
-
-    public void setScale(double x, double y, double z) {
-        _xScale = x;
-        _yScale = y;
-        _zScale = z;
-    }
-    
-    public double getXScale() {
-        return _xScale;
-    }
-    
-    public double getYScale() {
-        return _yScale;
-    }
-    
-    public double getZScale() {
-        return _zScale;
-    }
-    
-    abstract public DXFEntity translate(double x, double y, double z);
-
     protected Coordinate rotateAndPlace(Coordinate coord) {
         Coordinate[] array = new Coordinate[1];
         array[0] = coord;
@@ -114,12 +72,12 @@ public abstract class DXFEntity implements DXFConstants {
     }
 
     protected Coordinate[] rotateAndPlace(Coordinate[] coordarray) {
-        for (int i = 0; i < coordarray.length; i++) {
+        /*for (int i = 0; i < coordarray.length; i++) {
             coordarray[i] = rotateCoordDegrees(coordarray[i], _entRotationAngle);
             coordarray[i].x = _xScale * coordarray[i].x + _entBase.x;
             coordarray[i].y = _yScale * coordarray[i].y + _entBase.y;
             coordarray[i].z = _zScale * coordarray[i].z + _entBase.z;
-        }
+        }*/
         return coordarray;
     }
 
@@ -140,9 +98,7 @@ public abstract class DXFEntity implements DXFConstants {
     abstract public DXFEntity clone();
 
     public Geometry getGeometry() {
-        if (geometry == null) {
-            updateGeometry();
-        }
+        updateGeometry();
         return geometry;
     }
 

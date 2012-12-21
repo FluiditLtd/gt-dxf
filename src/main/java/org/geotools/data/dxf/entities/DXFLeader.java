@@ -123,8 +123,8 @@ public class DXFLeader extends DXFEntity {
     }
 
     public static void readLwVertices(DXFLineNumberReader br, List<DXFLwVertex> theVertices) throws IOException {
-        double x = 0, y = 0, b = 0;
-        boolean xFound = false, yFound = false;
+        double x = 0, y = 0, z = 0, b = 0;
+        boolean xFound = false, yFound = false, zFound = false;
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
@@ -146,12 +146,14 @@ public class DXFLeader extends DXFEntity {
                 case X_1: //"10"
                     // check of vorig vertex opgeslagen kan worden
                     if (xFound && yFound) {
-                        DXFLwVertex e = new DXFLwVertex(x, y, b);
+                        DXFLwVertex e = new DXFLwVertex(x, y, z, b);
                         theVertices.add(e);
                         xFound = false;
                         yFound = false;
+                        zFound = false;
                         x = 0;
                         y = 0;
+                        z = 0;
                         b = 0;
                     }
                     // TODO klopt dit???
@@ -166,6 +168,10 @@ public class DXFLeader extends DXFEntity {
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
                     yFound = true;
+                    break;
+                case Z_1: //"20"
+                    z = cvp.getDoubleValue();
+                    zFound = true;
                     break;
                 case DOUBLE_3: //"42"
                     b = cvp.getDoubleValue();
@@ -259,18 +265,6 @@ public class DXFLeader extends DXFEntity {
     @Override
     public String toString() {
         return toString("DXFLwPolyline", _flag, theVertices.size(), getColor(), (isVisible() ? 0 : 1), getThickness());
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        // Move all vertices
-        Iterator iter = theVertices.iterator();
-        while (iter.hasNext()) {
-            DXFLwVertex vertex = (DXFLwVertex) iter.next();
-            vertex._point.x += x;
-            vertex._point.y += y;
-        }
-        return this;
     }
 
     @Override

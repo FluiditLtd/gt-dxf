@@ -193,19 +193,6 @@ public class DXFPolyline extends DXFEntity {
     }
 
     @Override
-    public DXFEntity translate(double x, double y) {
-        // Move all vertices
-        Iterator iter = theVertex.iterator();
-        while (iter.hasNext()) {
-            DXFVertex vertex = (DXFVertex) iter.next();
-            vertex._point.x += x;
-            vertex._point.y += y;
-        }
-
-        return this;
-    }
-
-    @Override
     public DXFEntity clone() {
         return new DXFPolyline(this);
     }

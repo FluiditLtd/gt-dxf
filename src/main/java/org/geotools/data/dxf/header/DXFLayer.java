@@ -95,11 +95,6 @@ public class DXFLayer extends DXFEntity implements DXFConstants {
         s.append("]");
         return s.toString();
     }
-    
-    @Override
-    public DXFEntity translate(double x, double y) {
-        return this;
-    }
 
     public DXFEntity clone(){
         return this;

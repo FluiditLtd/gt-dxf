@@ -3,11 +3,11 @@
  */
 package org.geotools.data.dxf;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import org.geotools.data.dxf.parser.DXFParseException;
 import com.vividsolutions.jts.geom.Geometry;
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,6 +16,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.ArrayList;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -36,9 +38,11 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import org.geotools.data.DefaultServiceInfo;
 import org.geotools.data.ServiceInfo;
+import org.geotools.data.dxf.entities.DXFInsert;
 import org.geotools.data.dxf.parser.DXFColor;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.geometry.DirectPosition2D;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
@@ -46,7 +50,11 @@ import org.geotools.referencing.operation.transform.AffineTransform2D;
 import org.opengis.feature.IllegalAttributeException;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.DirectPosition;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.Matrix;
 import org.opengis.referencing.operation.TransformException;
 
 /**
@@ -66,9 +74,10 @@ public class DXFFeatureReader implements FeatureReader {
     private String info = "";
     private int featureID = 0;
     private double minX = 50, minY = 50, maxX = 100, maxY = 100;
-    private MathTransform transform = null;
+    private AffineTransform2D transform = null;
+    private MathTransform crsTransform = null;
 
-    public DXFFeatureReader(URL url, String typeName, String srs, GeometryType geometryType, ArrayList dxfInsertsFilter, AffineTransform transform) throws IOException, DXFParseException {
+    public DXFFeatureReader(URL url, String typeName, String srs, String targetCrs, GeometryType geometryType, ArrayList dxfInsertsFilter, AffineTransform transform) throws IOException, DXFParseException {
         InputStream cis = null;
         DXFLineNumberReader lnr = null;
         if (transform != null)
@@ -102,10 +111,11 @@ public class DXFFeatureReader implements FeatureReader {
             info = theUnivers.getInfo();
 
             // Affine transform the extents
-            if (transform != null && theUnivers.getHeader() != null && theUnivers.getHeader()._EXTMIN != null && theUnivers.getHeader()._EXTMAX != null) {
+            if (theUnivers.getHeader() != null && theUnivers.getHeader()._EXTMIN != null && theUnivers.getHeader()._EXTMAX != null) {
                 double[] extents = new double[]{theUnivers.getHeader()._EXTMIN.X(), theUnivers.getHeader()._EXTMIN.Y(),
                     theUnivers.getHeader()._EXTMAX.X(), theUnivers.getHeader()._EXTMAX.Y()};
-                transform.transform(extents, 0, extents, 0, 2);
+                if (transform != null)
+                    transform.transform(extents, 0, extents, 0, 2);
                 minX = extents[0];
                 minY = extents[1];
                 maxX = extents[2];
@@ -114,30 +124,24 @@ public class DXFFeatureReader implements FeatureReader {
 
             createFeatureType(typeName, srs);
             features = new ArrayList<SimpleFeature>(theUnivers.theEntities.size());
-            for (DXFEntity entry : theUnivers.theEntities) {
-                Geometry g = entry.getGeometry();
-                if (this.transform != null && g != null)
-                    try {
-                        g = JTS.transform(g, this.transform);
-                    } catch (MismatchedDimensionException ex) {
-                    } catch (TransformException ex) {
-                    }
-
-                if (entry.getRefLayer().isVisible() && entry.isVisible())
-                    features.add(SimpleFeatureBuilder.build(ft, new Object[]{
-                                g,
-                                entry.getLineTypeName(),
-                                DXFColor.getColor(entry.getColor()),
-                                entry.getRefLayerName(),
-                                new Double(entry.getThickness()),
-                                ((entry instanceof DXFText) ? ((DXFText) entry)._rotation : 0.0), // Text rotation
-                                ((entry instanceof DXFText) ? ((((DXFText)entry)._value != null) && !((DXFText)entry)._value.isEmpty() ? ((DXFText)entry)._value : " ") : " "),
-                                ((entry instanceof DXFText) ? ((DXFText)entry)._height : 1f),
-                                ((entry instanceof DXFText) ? ((DXFText)entry)._align : 0f),
-                                ((entry instanceof DXFText) ? ((DXFText)entry)._align2 : 0f),
-                                new Integer(entry.isVisible() ? 1 : 0),
-                            }, Integer.toString(featureID++)));
-            }
+            AffineTransform tr;
+            if (this.transform != null)
+                tr = new AffineTransform(this.transform);
+            else
+                tr = new AffineTransform();
+            
+            tr.translate(-theUnivers.getHeader()._UCSORG.X(), -theUnivers.getHeader()._UCSORG.Y());
+            
+            if (targetCrs != null)
+                try {
+                    crsTransform = CRS.findMathTransform(ft.getCoordinateReferenceSystem(), CRS.decode(targetCrs, true), true);
+                } catch (NoSuchAuthorityCodeException ex) {
+                } catch (FactoryException ex) {
+                }
+            
+            AffineTransform2D tr2 = new AffineTransform2D(tr);
+            for (DXFEntity entry : theUnivers.theEntities)
+                processEntity(entry, tr2, ft);
         } catch (IOException ioe) {
             log.error("Error reading data in datastore: ", ioe);
             throw ioe;
@@ -154,6 +158,60 @@ public class DXFFeatureReader implements FeatureReader {
         updateTypeFilter(typeName, geometryType, srs);
     }
 
+    private void processEntity(DXFEntity ent, AffineTransform2D transform, SimpleFeatureType ft) {
+        if (ent instanceof DXFInsert) {
+            transform = ((DXFInsert)ent).getTransform(transform);
+            for (DXFEntity child : ((DXFInsert)ent).getChildren())
+                processEntity(child, transform, ft);
+        }
+        else {
+            Geometry g = ent.getGeometry();
+            try {
+                g = JTS.transform(g, transform);
+            } catch (MismatchedDimensionException ex) {
+            } catch (TransformException ex) {
+            }
+
+            double rotation = 0;
+            if (ent instanceof DXFText) {
+                double orig = ((DXFText)ent)._rotation;
+                double x = ((DXFText)ent)._point.X();
+                double y = ((DXFText)ent)._point.Y();
+                Matrix matrix = transform.derivative(new Point2D.Double(x, y));
+                double x2 = matrix.getElement(0, 0) * x + matrix.getElement(0, 1) * y;
+                double y2 = matrix.getElement(1, 0) * x + matrix.getElement(1, 1) * y;
+                rotation = orig + Math.toDegrees(Math.atan2(y2 - y, x2 - x));
+
+                if (crsTransform != null) 
+                    try {
+                        DirectPosition pos1 = crsTransform.transform(new DirectPosition2D(ft.getCoordinateReferenceSystem(), x2, y2), null);
+                        DirectPosition pos2 = crsTransform.transform(new DirectPosition2D(ft.getCoordinateReferenceSystem(), x2 + 1, y2 + 1), null);
+                        rotation = rotation + (-45. + Math.toDegrees(Math.atan2(pos2.getOrdinate(1) - pos1.getOrdinate(1), pos2.getOrdinate(0) - pos1.getOrdinate(0))));
+                    } catch (MismatchedDimensionException ex) {
+                        Logger.global.log(Level.SEVERE, "ex", ex);
+                    } catch (TransformException ex) {
+                        Logger.global.log(Level.SEVERE, "ex", ex);
+                    }
+            }
+            
+            if (ent.getRefLayer().isVisible() && ent.isVisible())
+                features.add(SimpleFeatureBuilder.build(ft, new Object[]{
+                            g,
+                            ent.getLineTypeName(),
+                            DXFColor.getColor(ent.getColor()),
+                            ent.getRefLayerName(),
+                            new Double(ent.getThickness()),
+                            rotation, // Text rotation
+                            ((ent instanceof DXFText) ? ((((DXFText)ent)._value != null) && !((DXFText)ent)._value.isEmpty() ? ((DXFText)ent)._value : " ") : " "),
+                            ((ent instanceof DXFText) ? ((DXFText)ent)._height : 1f),
+                            ((ent instanceof DXFText) ? ((DXFText)ent)._align : 0f),
+                            ((ent instanceof DXFText) ? ((DXFText)ent)._align2 : 0f),
+                            new Integer(ent.isVisible() ? 1 : 0),
+                            ent,
+                        }, Integer.toString(featureID++)));
+        }
+    }
+    
     public ReferencedEnvelope getBounds() {
         if (ft != null)
             return new ReferencedEnvelope(minY, maxY, minX, maxX, ft.getCoordinateReferenceSystem());
@@ -212,6 +270,7 @@ public class DXFFeatureReader implements FeatureReader {
             ftb.add("align1", Float.class);
             ftb.add("align2", Float.class);
             ftb.add("visible", Integer.class);
+            ftb.add("entity", DXFEntity.class);
 
             ft = ftb.buildFeatureType();
 

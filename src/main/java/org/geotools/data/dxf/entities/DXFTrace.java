@@ -10,10 +10,10 @@ import org.geotools.data.dxf.header.DXFLineType;
 
 public class DXFTrace extends DXFSolid {
     public DXFTrace(DXFTrace newTrace) {
-        this(new DXFPoint(newTrace._p1._point.x, newTrace._p1._point.y, newTrace.getColor(), null, 0, newTrace.getThickness()),
-                new DXFPoint(newTrace._p2._point.x, newTrace._p2._point.y, newTrace.getColor(), null, 0, newTrace.getThickness()),
-                new DXFPoint(newTrace._p3._point.x, newTrace._p3._point.y, newTrace.getColor(), null, 0, newTrace.getThickness()),
-                new DXFPoint(newTrace._p4._point.x, newTrace._p4._point.y, newTrace.getColor(), null, 0, newTrace.getThickness()),
+        this(new DXFPoint(newTrace._p1.X(), newTrace._p1.Y(), newTrace._p1.Z(), newTrace.getColor(), null, 0, newTrace.getThickness()),
+                new DXFPoint(newTrace._p2.X(), newTrace._p2.Y(), newTrace._p2.Z(), newTrace.getColor(), null, 0, newTrace.getThickness()),
+                new DXFPoint(newTrace._p3.X(), newTrace._p3.Y(), newTrace._p3.Y(), newTrace.getColor(), null, 0, newTrace.getThickness()),
+                new DXFPoint(newTrace._p4.X(), newTrace._p4.Y(), newTrace._p4.Y(), newTrace.getColor(), null, 0, newTrace.getThickness()),
                 newTrace.getThickness(), newTrace.getColor(), newTrace.getRefLayer(),
                 newTrace.visibility, newTrace.getLineType());
 
@@ -63,20 +63,4 @@ public class DXFTrace extends DXFSolid {
         return s.toString();
     }
 
-    @Override
-    public DXFEntity translate(double x, double y) {
-        _p1._point.x += x;
-        _p1._point.y += y;
-
-        _p2._point.x += x;
-        _p2._point.y += y;
-
-        _p3._point.x += x;
-        _p3._point.y += y;
-
-        _p4._point.x += x;
-        _p4._point.y += y;
-        
-        return this;
-    }
 }

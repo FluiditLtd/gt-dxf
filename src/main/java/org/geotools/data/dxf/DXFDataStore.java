@@ -44,15 +44,21 @@ public class DXFDataStore extends AbstractFileDataStore {
     private URL url;
     private FeatureReader featureReader;
     private String srs;
+    private String targetSrs;
     private String strippedFileName;
     private String typeName;
     private ArrayList dxfInsertsFilter = new ArrayList();
     private AffineTransform transform;
 
     public DXFDataStore(URL url, String srs, AffineTransform transform) throws IOException {
+        this(url, srs, null, transform);
+    }
+
+    public DXFDataStore(URL url, String srs, String targetSrs, AffineTransform transform) throws IOException {
         this.url = url;
         this.strippedFileName = getURLTypeName(url);
         this.srs = srs;
+        this.targetSrs = targetSrs;
         this.transform = transform;
     }
 
@@ -153,7 +159,7 @@ public class DXFDataStore extends AbstractFileDataStore {
 
         if (featureReader == null) {
             try {
-                featureReader = new DXFFeatureReader(url, typeName, srs, geometryType, dxfInsertsFilter, transform);
+                featureReader = new DXFFeatureReader(url, typeName, srs, targetSrs, geometryType, dxfInsertsFilter, transform);
             } catch (DXFParseException e) {
                 throw new IOException("DXF parse exception" + e.getLocalizedMessage());
             }

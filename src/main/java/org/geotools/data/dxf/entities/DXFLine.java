@@ -19,8 +19,8 @@ public class DXFLine extends DXFEntity {
     public DXFPoint _b = new DXFPoint();
 
     public DXFLine(DXFLine newLine) {
-        this(new DXFPoint(newLine._a._point.x, newLine._a._point.y, newLine.getColor(), null, 0, newLine.getThickness()),
-                new DXFPoint(newLine._b._point.x, newLine._b._point.y, newLine.getColor(), null, 0, newLine.getThickness()),
+        this(new DXFPoint(newLine._a.X(), newLine._a.Y(), newLine._b.Z(), newLine.getColor(), null, 0, newLine.getThickness()),
+                new DXFPoint(newLine._b.X(), newLine._b.Y(), newLine._b.Z(), newLine.getColor(), null, 0, newLine.getThickness()),
                 newLine.getColor(), newLine.getRefLayer(), newLine.getLineType(), newLine.getThickness(), newLine.visibility);
 
         setType(newLine.getType());
@@ -35,7 +35,7 @@ public class DXFLine extends DXFEntity {
 
     public static DXFLine read(DXFLineNumberReader br, DXFUnivers univers) throws IOException {
         DXFLayer layer = null;
-        double x1 = 0, y1 = 0, x2 = 0, y2 = 0, thickness = 0;
+        double x1 = 0, y1 = 0, z1 = 0, x2 = 0, y2 = 0, z2 = 0, thickness = 0;
         DXFLineType lineType = null;
         int visibility = 0, color = -1;
 
@@ -67,11 +67,17 @@ public class DXFLine extends DXFEntity {
                 case Y_1: //"20"
                     y1 = cvp.getDoubleValue();
                     break;
+                case Z_1: //"30"
+                    z1 = cvp.getDoubleValue();
+                    break;
                 case X_2: //"11"
                     x2 = cvp.getDoubleValue();
                     break;
                 case Y_2: //"21"
                     y2 = cvp.getDoubleValue();
+                    break;
+                case Z_2: //"31"
+                    z2 = cvp.getDoubleValue();
                     break;
                 case LAYER_NAME: //"8"
                     layer = univers.findLayer(cvp.getStringValue());
@@ -93,8 +99,8 @@ public class DXFLine extends DXFEntity {
             }
 
         }
-        DXFLine e = new DXFLine(new DXFPoint(x1, y1, color, layer, visibility, 1),
-                new DXFPoint(x2, y2, color, layer, visibility, 1),
+        DXFLine e = new DXFLine(new DXFPoint(x1, y1, z1, color, layer, visibility, 1),
+                new DXFPoint(x2, y2, z2, color, layer, visibility, 1),
                 color,
                 layer,
                 lineType,
@@ -149,16 +155,6 @@ public class DXFLine extends DXFEntity {
         s.append(thickness);
         s.append("]");
         return s.toString();
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        _a._point.x += x;
-        _a._point.y += y;
-
-        _b._point.x += x;
-        _b._point.y += y;
-        return this;
     }
 
     @Override

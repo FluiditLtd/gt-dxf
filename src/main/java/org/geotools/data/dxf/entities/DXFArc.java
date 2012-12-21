@@ -51,7 +51,7 @@ public class DXFArc extends DXFEntity {
     }
 
     public static DXFArc read(DXFLineNumberReader br, DXFUnivers univers) throws NumberFormatException, IOException {
-        double x = 0, y = 0, r = 0, a1 = 0, a2 = 0, thickness = 0;
+        double x = 0, y = 0, z = 0, r = 0, a1 = 0, a2 = 0, thickness = 0;
         int visibility = 0, c = 0;
         DXFLineType lineType = null;
         DXFLayer l = null;
@@ -98,6 +98,9 @@ public class DXFArc extends DXFEntity {
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
                     break;
+                case Z_1: //"20"
+                    z = cvp.getDoubleValue();
+                    break;
                 case ANGLE_1: //"50"
                     a1 = cvp.getDoubleValue();
                     break;
@@ -116,7 +119,7 @@ public class DXFArc extends DXFEntity {
 
         }
         
-        DXFArc e = new DXFArc(a1, a2, new DXFPoint(x, y, c, null, visibility, 1), r, lineType, c, l, visibility, thickness);
+        DXFArc e = new DXFArc(a1, a2, new DXFPoint(x, y, z, c, null, visibility, 1), r, lineType, c, l, visibility, thickness);
         e.setType(GeometryType.LINE);
         e.setUnivers(univers);
         log.debug(e.toString(c, r, x, y, a1, a2, visibility, thickness));
@@ -148,7 +151,7 @@ public class DXFArc extends DXFEntity {
             double x = _point.X() + _radius * Math.cos(angle);
             double y = _point.Y() + _radius * Math.sin(angle);
 
-            Coordinate c = new Coordinate(x, y);
+            Coordinate c = new Coordinate(x, y, _point.Z());
             lc.add(c);
 
             if (angle >= endAngle)
@@ -159,14 +162,6 @@ public class DXFArc extends DXFEntity {
                 angle = endAngle;
         }
         return rotateAndPlace(lc.toArray(new Coordinate[lc.size()]));
-    }
-
-    @Override
-    public Geometry getGeometry() {
-        if (geometry == null) {
-            updateGeometry();
-        }
-        return super.getGeometry();
     }
 
     @Override
@@ -206,13 +201,6 @@ public class DXFArc extends DXFEntity {
         s.append(thickness);
         s.append("]");
         return s.toString();
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        _point._point.x += x;
-        _point._point.y += y;
-        return this;
     }
 
     @Override

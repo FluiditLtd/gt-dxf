@@ -21,7 +21,7 @@ import org.geotools.data.dxf.parser.DXFParseException;
 public class DXFMText extends DXFText {
 
     public DXFMText(DXFMText newText) {
-        this(newText._point._point.x, newText._point._point.y, newText._value,
+        this(newText._point.X(), newText._point.Y(), newText._point.Z(), newText._value,
                 newText._rotation, newText.getThickness(), newText._height,
                 newText._align, newText._align2, newText._style, newText.getColor(),
                 newText.getRefLayer(), newText._angle, newText._zoomfactor,
@@ -31,8 +31,8 @@ public class DXFMText extends DXFText {
         setUnivers(newText.getUnivers());
     }
 
-    public DXFMText(double x, double y, String value, double rotation, double thickness, double height, float align, float align2, String style, int color, DXFLayer l, double angle, double zoomFactor, int visibility, DXFLineType lineType) {
-        super(x, y, value, rotation, thickness, height, align, align2, style, color, l, angle, zoomFactor, visibility, lineType);
+    public DXFMText(double x, double y, double z, String value, double rotation, double thickness, double height, float align, float align2, String style, int color, DXFLayer l, double angle, double zoomFactor, int visibility, DXFLineType lineType) {
+        super(x, y, z, value, rotation, thickness, height, align, align2, style, color, l, angle, zoomFactor, visibility, lineType);
     }
 
     public static DXFMText read(DXFLineNumberReader br, DXFUnivers univers) throws IOException {
@@ -43,13 +43,14 @@ public class DXFMText extends DXFText {
         DXFLineType lineType = null;
         double x = 0,
                 y = 0,
+                z = 0,
                 angle = Double.NaN,
                 rotation = 0,
                 zoomfactor = 1,
                 thickness = DXFTables.defaultThickness,
                 height = 0;
 
-        double x2 = Double.NaN, y2 = Double.NaN;
+        double x2 = Double.NaN, y2 = Double.NaN, z2 = Double.NaN;
         
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
@@ -79,12 +80,19 @@ public class DXFMText extends DXFText {
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
                     break;
+                case Z_1: //"30"
+                    z = cvp.getDoubleValue();
+                    break;
                 case X_2: //"11"
                     x2 = cvp.getDoubleValue();
                     rotation = Double.NaN;
                     break;
                 case Y_2: //"21"
                     y2 = cvp.getDoubleValue();
+                    rotation = Double.NaN;
+                    break;                    
+                case Z_2: //"31"
+                    z2 = cvp.getDoubleValue();
                     rotation = Double.NaN;
                     break;                    
                 case TEXT_OR_NAME_2: //"3"
@@ -168,7 +176,7 @@ public class DXFMText extends DXFText {
                 rotation = Math.toDegrees(Math.atan2(y2, x2));
         }
         
-        DXFMText e = new DXFMText(x, y, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
+        DXFMText e = new DXFMText(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
         e.setType(GeometryType.POINT);
         e.setUnivers(univers);
         return e;
@@ -257,13 +265,6 @@ public class DXFMText extends DXFText {
         s.append(visibility);
         s.append("]");
         return s.toString();
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        _point._point.x += x;
-        _point._point.y += y;
-        return this;
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.geotools.data.dxf.parser.DXFConstants;
 import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geotools.data.dxf.entities.Point;
 
 public class DXFHeader implements DXFConstants {
 
@@ -26,14 +27,14 @@ public class DXFHeader implements DXFConstants {
     public int _SRID;
     public double _ANGDIR = 0; // Counterclockwise = 0, Clockwise = 1
     public double _ANGBASE = 0; // Base angle to 0
-    public DXFPoint _UCSORG = new DXFPoint(new Point2D.Double(0, 0));
+    public DXFPoint _UCSORG = new DXFPoint(new Point(0, 0, 0));
  
 
     public DXFHeader() {
-        _LIMMIN = new DXFPoint(new Point2D.Double(0, 0));
-        _LIMMAX = new DXFPoint(new Point2D.Double(100, 100));
-        _EXTMIN = new DXFPoint(new Point2D.Double(100, 100));
-        _EXTMAX = new DXFPoint(new Point2D.Double(50, 50));
+        _LIMMIN = new DXFPoint(new Point(0, 0, 0));
+        _LIMMAX = new DXFPoint(new Point(100, 100, 100));
+        _EXTMIN = new DXFPoint(new Point(100, 100, 100));
+        _EXTMAX = new DXFPoint(new Point(50, 50, 50));
         _FILLMODE = 0;
         _ACADVER = "AC1006";
         _SRID = 28992;
@@ -50,11 +51,11 @@ public class DXFHeader implements DXFConstants {
     }
 
     public static DXFHeader read(DXFLineNumberReader br) throws IOException {
-        Point2D.Double limmin = null;
-        Point2D.Double limmax = null;
-        Point2D.Double extmin = null;
-        Point2D.Double extmax = null;
-        Point2D.Double ucsOrg = new Point2D.Double(0, 0);
+        Point limmin = null;
+        Point limmax = null;
+        Point extmin = null;
+        Point extmax = null;
+        Point ucsOrg = new Point(0, 0, 0);
         double angbase = 0;
         double angdir = 0;
         int fillmode = 0;
@@ -90,7 +91,7 @@ public class DXFHeader implements DXFConstants {
                 case VARIABLE_NAME:
                     String variableName = cvp.getStringValue();
                     double x = 0,
-                     y = 0, angle = 0;
+                     y = 0, z = 0, angle = 0;
                     int tfillmode = 0;
                     String tversion = null;
 
@@ -126,6 +127,9 @@ public class DXFHeader implements DXFConstants {
                             case Y_1:
                                 y = cvp.getDoubleValue();
                                 break;
+                            case Z_1:
+                                z = cvp.getDoubleValue();
+                                break;
                             case TEXT:
                                 tversion = cvp.getStringValue();
                                 break;
@@ -139,13 +143,13 @@ public class DXFHeader implements DXFConstants {
                         }
                     }
                     if (variableName.equals($LIMMIN)) {
-                        limmin = new Point2D.Double(x, y);
+                        limmin = new Point(x, y, z);
                     } else if (variableName.equals($LIMMAX)) {
-                        limmax = new Point2D.Double(x, y);
+                        limmax = new Point(x, y, z);
                     } else if (variableName.equals($EXTMIN)) {
-                        extmin = new Point2D.Double(x, y);
+                        extmin = new Point(x, y, z);
                     } else if (variableName.equals($EXTMAX)) {
-                        extmax = new Point2D.Double(x, y);
+                        extmax = new Point(x, y, z);
                     } else if (variableName.equals($ACADVER)) {
                         version = tversion;
                     } else if (variableName.equals($FILLMODE)) {
@@ -155,7 +159,7 @@ public class DXFHeader implements DXFConstants {
                     } else if (variableName.equals($ANGDIR)) {
                         angdir = tfillmode;
                     } else if (variableName.equals($UCSORG)) {
-                        ucsOrg = new Point2D.Double(x, y);
+                        ucsOrg = new Point(x, y, z);
                     }
                     break;
                 default:
@@ -171,8 +175,6 @@ public class DXFHeader implements DXFConstants {
         e._ANGBASE = angbase;
         e._ANGDIR = angdir;
         e._UCSORG = new DXFPoint(ucsOrg);
-        log.debug(e.toString(limmin, limmax, extmin, extmax, fillmode, version, srid));
-        log.debug(">Exit at line: " + br.getLineNumber());
         return e;
     }
 

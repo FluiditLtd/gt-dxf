@@ -23,7 +23,7 @@ public class DXFCircle extends DXFEntity {
     public double _radius = 0;
 
     public DXFCircle(DXFCircle newCircle) {
-        this(new DXFPoint(newCircle._point._point.x, newCircle._point._point.y, newCircle.getColor(), newCircle.getRefLayer(), newCircle.visibility, newCircle.getThickness()),
+        this(new DXFPoint(newCircle._point.X(), newCircle._point.Y(), newCircle._point.Z(), newCircle.getColor(), newCircle.getRefLayer(), newCircle.visibility, newCircle.getThickness()),
                 newCircle._radius, newCircle.getLineType(), newCircle.getColor(), newCircle.getRefLayer(), 0, newCircle.getThickness());
 
         setType(newCircle.getType());
@@ -39,7 +39,7 @@ public class DXFCircle extends DXFEntity {
     public static DXFCircle read(DXFLineNumberReader br, DXFUnivers univers) throws NumberFormatException, IOException {
 
         int visibility = 0, c = 0;
-        double x = 0, y = 0, r = 0, thickness = 1;
+        double x = 0, y = 0, z = 0, r = 0, thickness = 1;
         DXFLayer l = null;
         DXFLineType lineType = null;
 
@@ -87,6 +87,9 @@ public class DXFCircle extends DXFEntity {
                 case Y_1: //"20"
                     y = cvp.getDoubleValue();
                     break;
+                case Z_1: //"30"
+                    z = cvp.getDoubleValue();
+                    break;
                 case DOUBLE_1: //"40"
                     r = cvp.getDoubleValue();
                     break;
@@ -95,7 +98,7 @@ public class DXFCircle extends DXFEntity {
             }
 
         }
-        DXFCircle e = new DXFCircle(new DXFPoint(x, y, c, l, visibility, 1), r, lineType, c, l, visibility, thickness);
+        DXFCircle e = new DXFCircle(new DXFPoint(x, y, z, c, l, visibility, 1), r, lineType, c, l, visibility, thickness);
         e.setType(GeometryType.POLYGON);
         e.setUnivers(univers);
         return e;
@@ -116,9 +119,9 @@ public class DXFCircle extends DXFEntity {
 
         double angle = startAngle;
         for (;;) {
-            double x = _point._point.getX() + _radius * Math.cos(angle);
-            double y = _point._point.getY() + _radius * Math.sin(angle);
-            Coordinate c = new Coordinate(x, y);
+            double x = _point.X() + _radius * Math.cos(angle);
+            double y = _point.Y() + _radius * Math.sin(angle);
+            Coordinate c = new Coordinate(x, y, _point.Z());
             lc.add(c);
 
             if (angle >= endAngle) {
@@ -175,13 +178,6 @@ public class DXFCircle extends DXFEntity {
         s.append(thickness);
         s.append("]");
         return s.toString();
-    }
-
-    @Override
-    public DXFEntity translate(double x, double y) {
-        _point._point.x += x;
-        _point._point.y += y;
-        return this;
     }
 
     @Override

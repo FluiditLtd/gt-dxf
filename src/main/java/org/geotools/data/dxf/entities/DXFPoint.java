@@ -173,15 +173,6 @@ public class DXFPoint extends DXFEntity {
     }
 
     @Override
-    public DXFEntity translate(double x, double y, double z) {
-        _point.x += x;
-        _point.y += y;
-        _point.z += z;
-
-        return this;
-    }
-
-    @Override
     public DXFEntity clone() {
         return new DXFPoint(this);
     }
