@@ -166,6 +166,9 @@ public class DXFFeatureReader implements FeatureReader {
         }
         else {
             Geometry g = ent.getGeometry();
+            if (g == null)
+                return;
+            
             try {
                 g = JTS.transform(g, transform);
             } catch (MismatchedDimensionException ex) {
