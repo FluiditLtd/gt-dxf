@@ -12,8 +12,6 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFactorySpi;
 import org.geotools.data.FileDataStore;
@@ -28,8 +26,6 @@ import org.opengis.referencing.NoSuchAuthorityCodeException;
  * @source $URL: http://svn.osgeo.org/geotools/branches/2.7.x/build/maven/javadoc/../../../modules/unsupported/dxf/src/main/java/org/geotools/data/dxf/DXFDataStoreFactory.java $
  */
 public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
-    private static final Log log = LogFactory.getLog(DXFDataStoreFactory.class);
-
     public static final DataStoreFactorySpi.Param PARAM_URL = new Param("url", URL.class, "url to a .dxf file");    
     public static final DataStoreFactorySpi.Param PARAM_SRS = new Param("srs", String.class, "srs for the .dxf file");    
     public static final DataStoreFactorySpi.Param PARAM_TARGET_SRS = new Param("target srs", String.class, "target srs; optional; used for converting text rotation angles");    
