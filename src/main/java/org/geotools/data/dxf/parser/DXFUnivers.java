@@ -10,13 +10,7 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Collections;
-
-import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.entities.DXFEntity;
-import org.geotools.data.dxf.entities.DXFInsert;
-import org.geotools.data.dxf.entities.DXFPoint;
 import org.geotools.data.dxf.header.DXFBlock;
 import org.geotools.data.dxf.header.DXFBlockReference;
 import org.geotools.data.dxf.header.DXFBlocks;
@@ -25,12 +19,9 @@ import org.geotools.data.dxf.header.DXFHeader;
 import org.geotools.data.dxf.header.DXFLayer;
 import org.geotools.data.dxf.header.DXFLineType;
 import org.geotools.data.dxf.header.DXFTables;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import sun.rmi.runtime.Log;
 
 public class DXFUnivers implements DXFConstants {
-
-    private static final Log log = LogFactory.getLog(DXFUnivers.class);
     public static final PrecisionModel precisionModel = new PrecisionModel(PrecisionModel.FLOATING);
     public static final int NUM_OF_SEGMENTS = 16; // Minimum number of segments for a circle (also used for arc)
     public static final double MIN_ANGLE = 2 * Math.PI / NUM_OF_SEGMENTS; // Minimum number of segments for a circle (also used for arc)

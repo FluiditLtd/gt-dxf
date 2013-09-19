@@ -1,13 +1,12 @@
 package org.geotools.data.dxf.parser;
 
+import java.util.logging.Logger;
+
 /** 
  * An enumeration that represents all valid DXF Group Codes with
  * associated value types as listed in specs.
  * 
  */
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public enum DXFGroupCode {
 
     UNSUPPORTED(-1, DXFValueType.STRING),
@@ -372,7 +371,6 @@ public enum DXFGroupCode {
     XDATA_INT32(1071, DXFValueType.INTEGER);
     private int m_code;
     private DXFValueType m_type;
-    private static final Log log = LogFactory.getLog(DXFGroupCode.class);
 
     DXFGroupCode(int code, DXFValueType type) {
         m_code = code;
@@ -393,7 +391,7 @@ public enum DXFGroupCode {
                 return agc;
             }
         }
-        log.warn("Unknown Group Code: " + code + ", should not happen, parse error?");
+        Logger.getLogger(DXFGroupCode.class.getName()).warning("Unknown Group Code: " + code + ", should not happen, parse error?");
 
         return UNSUPPORTED;
     }

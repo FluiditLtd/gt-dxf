@@ -10,12 +10,8 @@ import org.geotools.data.dxf.parser.DXFConstants;
 import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFParseException;
 import org.geotools.data.dxf.parser.DXFUnivers;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class DXFBlocks implements DXFConstants {
-
-    private static final Log log = LogFactory.getLog(DXFBlocks.class);
     public Vector<DXFBlock> theBlocks = new Vector<DXFBlock>();
 
     public DXFBlocks() {
@@ -32,9 +28,6 @@ public class DXFBlocks implements DXFConstants {
     public static DXFBlocks readBlocks(DXFLineNumberReader br, DXFUnivers univers) throws IOException {
 
         Vector<DXFBlock> sBlocks = new Vector<DXFBlock>();
-
-        int sln = br.getLineNumber();
-        log.debug(">Enter at line: " + sln);
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
@@ -71,8 +64,6 @@ public class DXFBlocks implements DXFConstants {
 
         }
         DXFBlocks e = new DXFBlocks(sBlocks);
-        log.debug(e.toString(sBlocks.size()));
-        log.debug(">Exit at line: " + br.getLineNumber());
         return e;
     }
 

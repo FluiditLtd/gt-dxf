@@ -1,6 +1,5 @@
 package org.geotools.data.dxf.header;
 
-import java.awt.BasicStroke;
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.Vector;
@@ -11,13 +10,9 @@ import org.geotools.data.dxf.parser.DXFConstants;
 import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import org.geotools.data.dxf.parser.DXFUnivers;
-import org.geotools.data.dxf.header.DXFBlockRecord;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class DXFTables implements DXFConstants {
 
-    private static final Log log = LogFactory.getLog(DXFTables.class);
     public static final double defaultThickness = 1.0f;
     public Vector<DXFLayer> theLayers = new Vector<DXFLayer>();
     public Vector<DXFLineType> theLineTypes = new Vector<DXFLineType>();
@@ -34,8 +29,6 @@ public class DXFTables implements DXFConstants {
         Vector<DXFLayer> sLayers = new Vector<DXFLayer>();
         Vector<DXFLineType> sLineTypes = new Vector<DXFLineType>();
 
-        int sln = br.getLineNumber();
-        log.debug(">Enter at line: " + sln);
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
 
@@ -66,15 +59,11 @@ public class DXFTables implements DXFConstants {
             }
         }
         DXFTables e = new DXFTables(sLayers, sLineTypes);
-        log.debug(e.toString(sLayers.size(), sLineTypes.size()));
-        log.debug(">Exit at line: " + br.getLineNumber());
         return e;
     }
 
     public static void readTable(DXFLineNumberReader br, Vector<DXFLayer> sLayers, Vector<DXFLineType> sLineTypes, DXFUnivers univers) throws IOException {
 
-        int sln = br.getLineNumber();
-        log.debug(">>Enter at line: " + sln);
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
 

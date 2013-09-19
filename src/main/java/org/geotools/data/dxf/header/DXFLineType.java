@@ -9,12 +9,8 @@ import org.geotools.data.dxf.parser.DXFParseException;
 import org.geotools.data.dxf.parser.DXFCodeValuePair;
 import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class DXFLineType {
-
-    private static final Log log = LogFactory.getLog(DXFLineType.class);
     public static final String DEFAULT_NAME = "default";
     public String _name = "DXFLineType";                       // 2
     public String _value = "";					// 3
@@ -41,8 +37,6 @@ public class DXFLineType {
         Vector<Float> spacing = new Vector<Float>();
         float count = 0, length = 0;
 
-        int sln = br.getLineNumber();
-        log.debug(">Enter at line: " + sln);
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
 
@@ -85,12 +79,10 @@ public class DXFLineType {
 
         }
 
-        log.debug(">Exit at line: " + br.getLineNumber());
         if (value.equals("") && name.equals("")) {
             return null;
         } else {
             DXFLineType e = new DXFLineType(name, value, length, count, spacing);
-            log.debug(e.toString(name, value, length, count));
             return e;
         }
     }

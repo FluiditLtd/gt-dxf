@@ -1,8 +1,6 @@
 package org.geotools.data.dxf.parser;
 
 import java.io.IOException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  *
@@ -11,8 +9,6 @@ import org.apache.commons.logging.LogFactory;
  * @source $URL: http://svn.osgeo.org/geotools/branches/2.7.x/build/maven/javadoc/../../../modules/unsupported/dxf/src/main/java/org/geotools/data/dxf/parser/DXFCodeValuePair.java $
  */
 public class DXFCodeValuePair {
-    private static final Log log = LogFactory.getLog(DXFCodeValuePair.class);
-
     private DXFGroupCode gc;
     private short shortValue = 0;
     private int intValue = 0;

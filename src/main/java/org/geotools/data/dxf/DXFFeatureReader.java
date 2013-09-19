@@ -29,8 +29,6 @@ import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import org.geotools.data.DataSourceException;
 import org.geotools.data.FeatureReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.geotools.referencing.NamedIdentifier;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -63,8 +61,6 @@ import org.opengis.referencing.operation.TransformException;
  * @source $URL: http://svn.osgeo.org/geotools/branches/2.7.x/build/maven/javadoc/../../../modules/unsupported/dxf/src/main/java/org/geotools/data/dxf/DXFFeatureReader.java $
  */
 public class DXFFeatureReader implements FeatureReader {
-
-    private static final Log log = LogFactory.getLog(DXFFeatureReader.class);
     private SimpleFeatureType ft;
     private Iterator<SimpleFeature> entityIterator;
     private ArrayList<SimpleFeature> features;
@@ -143,7 +139,7 @@ public class DXFFeatureReader implements FeatureReader {
             for (DXFEntity entry : theUnivers.theEntities)
                 processEntity(entry, tr2, ft);
         } catch (IOException ioe) {
-            log.error("Error reading data in datastore: ", ioe);
+            Logger.getLogger(DXFFeatureReader.class.getName()).log(Level.WARNING, "Error reading data in datastore: ", ioe);
             throw ioe;
         } finally {
             if (lnr != null) {
@@ -252,7 +248,7 @@ public class DXFFeatureReader implements FeatureReader {
                     SRID = Integer.parseInt(code);
                 }
             } catch (Exception e) {
-                log.error("SRID could not be determined from crs!");
+                Logger.getLogger(DXFFeatureReader.class.getName()).log(Level.WARNING, "SRID could not be determined from crs!", e);
             }
         }
 

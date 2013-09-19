@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.net.URL;
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFParseException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.geotools.data.AbstractFileDataStore;
 import org.geotools.data.FeatureReader;
 import java.util.ArrayList;
@@ -17,8 +15,6 @@ import org.geotools.data.FilteringFeatureReader;
 import org.geotools.data.Query;
 import org.geotools.data.ServiceInfo;
 import org.geotools.data.Transaction;
-import org.geotools.feature.FeatureCollection;
-import org.geotools.feature.FeatureCollections;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
@@ -39,8 +35,6 @@ import org.opengis.filter.Filter;
  * @source $URL: http://svn.osgeo.org/geotools/branches/2.7.x/build/maven/javadoc/../../../modules/unsupported/dxf/src/main/java/org/geotools/data/dxf/DXFDataStore.java $
  */
 public class DXFDataStore extends AbstractFileDataStore {
-
-    private static final Log log = LogFactory.getLog(DXFDataStore.class);
     private URL url;
     private FeatureReader featureReader;
     private String srs;
@@ -115,10 +109,6 @@ public class DXFDataStore extends AbstractFileDataStore {
 
     @Override
     public SimpleFeatureType getSchema() throws IOException {
-        if (typeName == null) {
-            log.warn("Typename is null, probably because of using getFeatureSource().\n" +
-                    "\tPlease use getFeatureSource(typename)");
-        }
         return getSchema(typeName);
     }
 
@@ -148,7 +138,6 @@ public class DXFDataStore extends AbstractFileDataStore {
 
     public void resetFeatureReader(String typeName) throws IOException {
         if (typeName == null) {
-            log.info("No typeName given for featureReader");
             typeName = "";
         }
         this.typeName = typeName;

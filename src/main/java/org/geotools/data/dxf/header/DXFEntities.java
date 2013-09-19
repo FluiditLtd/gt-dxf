@@ -24,13 +24,9 @@ import org.geotools.data.dxf.parser.DXFConstants;
 import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import org.geotools.data.dxf.parser.DXFUnivers;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.geotools.data.dxf.entities.*;
 
 public class DXFEntities implements DXFConstants {
-
-    private static final Log log = LogFactory.getLog(DXFEntities.class);
     public Vector<DXFEntity> theEntities = new Vector<DXFEntity>();
 
     public DXFEntities() {
@@ -49,8 +45,6 @@ public class DXFEntities implements DXFConstants {
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
 
-        int sln = br.getLineNumber();
-        log.debug(">Enter at line: " + sln);
         boolean doLoop = true;
         while (doLoop) {
             cvp = new DXFCodeValuePair();
@@ -115,8 +109,6 @@ public class DXFEntities implements DXFConstants {
 
         }
         DXFEntities e = new DXFEntities(sEnt);
-        log.debug(e.toString(sEnt.size()));
-        log.debug(">Exit at line: " + br.getLineNumber());
         return e;
     }
 

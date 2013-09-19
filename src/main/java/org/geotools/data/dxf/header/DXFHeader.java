@@ -11,13 +11,9 @@ import org.geotools.data.dxf.entities.DXFPoint;
 import org.geotools.data.dxf.parser.DXFCodeValuePair;
 import org.geotools.data.dxf.parser.DXFConstants;
 import org.geotools.data.dxf.parser.DXFGroupCode;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.geotools.data.dxf.entities.Point;
 
 public class DXFHeader implements DXFConstants {
-
-    private static final Log log = LogFactory.getLog(DXFHeader.class);
     public DXFPoint _LIMMIN;
     public DXFPoint _LIMMAX;
     public DXFPoint _EXTMIN;
@@ -63,8 +59,6 @@ public class DXFHeader implements DXFConstants {
         int srid = 28992; // default rd new
 
 
-        int sln = br.getLineNumber();
-        log.debug(">Enter at line: " + sln);
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
 
