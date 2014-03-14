@@ -137,7 +137,7 @@ public class DXFFeatureReader implements FeatureReader {
             
             AffineTransform2D tr2 = new AffineTransform2D(tr);
             for (DXFEntity entry : theUnivers.theEntities)
-                processEntity(entry, tr2, ft);
+                processEntity(entry, tr2, ft, -1);
         } catch (IOException ioe) {
             Logger.getLogger(DXFFeatureReader.class.getName()).log(Level.WARNING, "Error reading data in datastore: ", ioe);
             throw ioe;
@@ -154,11 +154,11 @@ public class DXFFeatureReader implements FeatureReader {
         updateTypeFilter(typeName, geometryType, srs);
     }
 
-    private void processEntity(DXFEntity ent, AffineTransform2D transform, SimpleFeatureType ft) {
+    private void processEntity(DXFEntity ent, AffineTransform2D transform, SimpleFeatureType ft, int insertColor) {
         if (ent instanceof DXFInsert) {
             transform = ((DXFInsert)ent).getTransform(transform);
             for (DXFEntity child : ((DXFInsert)ent).getChildren())
-                processEntity(child, transform, ft);
+                processEntity(child, transform, ft, ((DXFInsert)ent).getColor());
         }
         else {
             Geometry g = ent.getGeometry();
@@ -197,7 +197,7 @@ public class DXFFeatureReader implements FeatureReader {
                 features.add(SimpleFeatureBuilder.build(ft, new Object[]{
                             g,
                             ent.getLineTypeName(),
-                            DXFColor.getColor(ent.getColor()),
+                            DXFColor.getColor(ent.getActualColor(insertColor)),
                             ent.getRefLayerName(),
                             new Double(ent.getThickness()),
                             rotation, // Text rotation

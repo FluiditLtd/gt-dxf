@@ -143,6 +143,20 @@ public abstract class DXFEntity implements DXFConstants {
     public int getColor() {
         return _color;
     }
+    
+    public int getActualColor(int insertColor) {
+        if (_color == 0 && insertColor != -1)
+            return insertColor;
+        else if (_color == -1 || _color == 256) {
+            if (_refLayer != null)
+                return Math.max(1, _refLayer._color);
+            else
+                return 1;
+        }
+        else
+            return _color;
+             
+    }
 
     public String getColorRGB() {
         return DXFColor.getColorRGB(_color);
