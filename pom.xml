@@ -19,7 +19,7 @@
     <!-- =========================================================== -->
     <groupId>fi.fcg</groupId>
     <artifactId>gt-dxf</artifactId>
-    <version>10.4</version>
+    <version>11.0</version>
     <packaging>jar</packaging>
     <name>dxf</name>
     <description>
@@ -35,7 +35,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <geotools.version>10.4</geotools.version>
+        <geotools.version>11.0</geotools.version>
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
@@ -118,12 +118,12 @@
         <dependency>
             <groupId>com.vividsolutions</groupId>
             <artifactId>jts</artifactId>
-            <version>1.12</version>
+            <version>1.13</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>1.4</version>
+            <version>2.4</version>
         </dependency>
     </dependencies>
 
