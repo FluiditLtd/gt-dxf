@@ -178,10 +178,15 @@ public class DXFText extends DXFEntity {
         align /= 2f;
         align2 /= 2f;
         
-        DXFText e = new DXFText(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
-        e.setType(GeometryType.POINT);
-        e.setUnivers(univers);
-        return e;
+        value = value.replace("(?m)^\\s*$", ""); 
+        if (!value.trim().isEmpty()) {
+            DXFText e = new DXFText(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
+            e.setType(GeometryType.POINT);
+            e.setUnivers(univers);
+            return e;
+        }
+        else
+            return null;
     }
     
     /**

@@ -145,10 +145,15 @@ public class DXFAttrib extends DXFText {
             visibility = 1;
         //System.out.println(String.format("%d %d %s", visibility, flag, value));
         
-        DXFAttrib e = new DXFAttrib(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
-        e.setType(GeometryType.POINT);
-        e.setUnivers(univers);
-        return e;
+        value = value.replace("(?m)^\\s*$", ""); 
+        if (!value.trim().isEmpty()) {
+            DXFAttrib e = new DXFAttrib(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
+            e.setType(GeometryType.POINT);
+            e.setUnivers(univers);
+            return e;
+        }
+        else
+            return null;
     }
 
     @Override

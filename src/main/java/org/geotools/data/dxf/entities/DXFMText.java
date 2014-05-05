@@ -176,10 +176,15 @@ public class DXFMText extends DXFText {
                 rotation = Math.toDegrees(Math.atan2(y2, x2));
         }
         
-        DXFMText e = new DXFMText(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
-        e.setType(GeometryType.POINT);
-        e.setUnivers(univers);
-        return e;
+        value = value.replace("(?m)^\\s*$", ""); 
+        if (!value.trim().isEmpty()) {
+            DXFMText e = new DXFMText(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
+            e.setType(GeometryType.POINT);
+            e.setUnivers(univers);
+            return e;
+        }
+        else
+            return null;        
     }
     
     /**
