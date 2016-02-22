@@ -19,7 +19,6 @@ import org.geotools.data.dxf.header.DXFHeader;
 import org.geotools.data.dxf.header.DXFLayer;
 import org.geotools.data.dxf.header.DXFLineType;
 import org.geotools.data.dxf.header.DXFTables;
-import sun.rmi.runtime.Log;
 
 public class DXFUnivers implements DXFConstants {
     public static final PrecisionModel precisionModel = new PrecisionModel(PrecisionModel.FLOATING);
