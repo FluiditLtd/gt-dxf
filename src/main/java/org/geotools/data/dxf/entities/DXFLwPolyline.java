@@ -196,7 +196,7 @@ public class DXFLwPolyline extends DXFEntity {
         Coordinate[] ca = toCoordinateArray();
 
         if (ca != null && ca.length >= 2) {
-            if (getType() == GeometryType.POLYGON && ca.length >= 3) {
+            if (getType() == GeometryType.POLYGON && ca.length >= 4) {
                 LinearRing lr = getUnivers().getGeometryFactory().createLinearRing(ca);
                 geometry = getUnivers().getGeometryFactory().createPolygon(lr, null);
             } else {
