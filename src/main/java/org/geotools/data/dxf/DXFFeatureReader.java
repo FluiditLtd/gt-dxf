@@ -206,6 +206,7 @@ public class DXFFeatureReader implements FeatureReader {
                             ((ent instanceof DXFText) ? ((DXFText)ent)._align : 0f),
                             ((ent instanceof DXFText) ? ((DXFText)ent)._align2 : 0f),
                             new Integer(ent.isVisible() ? 1 : 0),
+                            ent.getClass().getSimpleName(),
                             ent,
                         }, Integer.toString(featureID++)));
         }
@@ -269,6 +270,7 @@ public class DXFFeatureReader implements FeatureReader {
             ftb.add("align1", Float.class);
             ftb.add("align2", Float.class);
             ftb.add("visible", Integer.class);
+            ftb.add("class", String.class);
             ftb.add("entity", DXFEntity.class);
 
             ft = ftb.buildFeatureType();
