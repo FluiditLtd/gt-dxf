@@ -3,6 +3,8 @@ package org.geotools.data.dxf.entities;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import java.io.EOFException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
@@ -46,6 +48,7 @@ public class DXFAttrib extends DXFText {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -122,6 +125,9 @@ public class DXFAttrib extends DXFText {
                 case LINETYPE_NAME: //"6"
                     lineType = univers.findLType(cvp.getStringValue());
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -149,6 +155,7 @@ public class DXFAttrib extends DXFText {
         if (!value.trim().isEmpty()) {
             DXFAttrib e = new DXFAttrib(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
             e.setType(GeometryType.POINT);
+            e.setXData(xdata);
             e.setUnivers(univers);
             return e;
         }

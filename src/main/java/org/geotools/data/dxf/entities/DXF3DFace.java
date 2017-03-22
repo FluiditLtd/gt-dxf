@@ -6,6 +6,8 @@ import com.vividsolutions.jts.geom.LinearRing;
 import java.io.EOFException;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
@@ -45,6 +47,7 @@ public class DXF3DFace extends DXFEntity {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -107,6 +110,9 @@ public class DXF3DFace extends DXFEntity {
                 case VISIBILITY: //"60"
                     visibility = cvp.getShortValue();
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -120,6 +126,7 @@ public class DXF3DFace extends DXFEntity {
                 lineType,
                 thickness,
                 visibility);
+        e.setXData(xdata);
         e.setType(GeometryType.POLYGON);
         e.setUnivers(univers);
         return e;

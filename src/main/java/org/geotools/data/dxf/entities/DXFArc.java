@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import org.geotools.data.dxf.parser.DXFUnivers;
@@ -53,6 +54,7 @@ public class DXFArc extends DXFEntity {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -106,6 +108,9 @@ public class DXFArc extends DXFEntity {
                 case THICKNESS:
                     thickness = cvp.getDoubleValue();
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -113,6 +118,7 @@ public class DXFArc extends DXFEntity {
         }
         
         DXFArc e = new DXFArc(a1, a2, new DXFPoint(x, y, z, c, null, visibility, 1), r, lineType, c, l, visibility, thickness);
+        e.setXData(xdata);
         e.setType(GeometryType.LINE);
         e.setUnivers(univers);
         return e;

@@ -3,12 +3,23 @@ package org.geotools.data.dxf.entities;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.algorithm.Angle;
+import java.io.EOFException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import org.geotools.data.GeometryType;
+import org.geotools.data.dxf.header.DXFBlock;
 import org.geotools.data.dxf.header.DXFBlockReference;
 import org.geotools.data.dxf.header.DXFLayer;
 import org.geotools.data.dxf.header.DXFLineType;
+import org.geotools.data.dxf.parser.DXFCodeValuePair;
 import org.geotools.data.dxf.parser.DXFColor;
 import org.geotools.data.dxf.parser.DXFConstants;
+import org.geotools.data.dxf.parser.DXFGroupCode;
+import org.geotools.data.dxf.parser.DXFLineNumberReader;
+import org.geotools.data.dxf.parser.DXFParseException;
 import org.geotools.data.dxf.parser.DXFUnivers;
 
 
@@ -22,6 +33,8 @@ public abstract class DXFEntity implements DXFConstants {
     protected DXFLayer _refLayer;
     protected double _thickness;
     protected int visibility = 0;
+    protected Map<String, List<String>> xdata;
+    
 
     /**
      * Copy constructor.
@@ -199,5 +212,84 @@ public abstract class DXFEntity implements DXFConstants {
 
     public void setGeometry(Geometry geometry) {
         this.geometry = geometry;
+    }
+    
+    public Map<String, List<String>> getXData() {
+        return xdata;
+    }
+    
+    public void setXData(Map<String, List<String>> xdata) {
+        this.xdata = xdata;
+    }
+    
+    protected static Map<String, List<String>> addXdata(String application, String data, Map<String, List<String>> xdata) {
+        if (xdata == null)
+            xdata = new HashMap<String, List<String>>();
+        
+        if (!xdata.containsKey(application)) {
+            List<String> list = new LinkedList<String>();
+            xdata.put(application, list);
+            list.add(data);
+        }
+        else
+            xdata.get(application).add(data);
+        
+        return xdata;
+    }
+    
+    public static Map<String, List<String>> readXdata(String application, DXFLineNumberReader br, DXFUnivers univers, Map<String, List<String>> xdata) throws IOException {
+        DXFCodeValuePair cvp = null;
+        DXFGroupCode gc = null;
+
+        boolean doLoop = true;
+        while (doLoop) {
+            cvp = new DXFCodeValuePair();
+            try {
+                gc = cvp.read(br);
+            } catch (DXFParseException ex) {
+                throw new IOException("DXF parse error" + ex.getLocalizedMessage());
+            } catch (EOFException e) {
+                doLoop = false;
+                break;
+            }
+
+            switch (gc) {
+                case XDATA_CONTROL_STRING:
+                    if (cvp.getStringValue().trim().equals("}"))
+                        doLoop = false;
+                    break;
+                case XDATA_ASCII_STRING:
+                case XDATA_CHUNK_OF_BYTES:
+                case XDATA_LAYER_NAME:
+                    xdata = addXdata(application, cvp.getStringValue(), xdata);
+                    break;
+                case XDATA_INT16:
+                    xdata = addXdata(application, Short.toString(cvp.getShortValue()), xdata);
+                    break;
+                case XDATA_INT32:
+                    xdata = addXdata(application, Integer.toString(cvp.getIntValue()), xdata);
+                    break;
+                case XDATA_DOUBLE:
+                case XDATA_X_1:
+                case XDATA_X_2:
+                case XDATA_X_3:
+                case XDATA_X_4:
+                case XDATA_Y_1:
+                case XDATA_Y_2:
+                case XDATA_Y_3:
+                case XDATA_Y_4:
+                case XDATA_Z_1:
+                case XDATA_Z_2:
+                case XDATA_Z_3:
+                case XDATA_Z_4:
+                case XDATA_SCALE_FACTOR:
+                    xdata = addXdata(application, Double.toString(cvp.getDoubleValue()), xdata);
+                    break;
+                default:
+                    doLoop = false;
+                    break;
+            }
+        }
+        return xdata;
     }
 }

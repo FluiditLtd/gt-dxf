@@ -6,6 +6,8 @@ import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import java.awt.geom.Point2D;
 import java.io.EOFException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
@@ -81,6 +83,7 @@ public class DXFPoint extends DXFEntity {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -122,6 +125,9 @@ public class DXFPoint extends DXFEntity {
                 case THICKNESS: //"39"
                     thickness = cvp.getDoubleValue();
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -130,6 +136,7 @@ public class DXFPoint extends DXFEntity {
         DXFPoint e = new DXFPoint(x, y, z, color, layer, visibility, thickness);
         e.setType(GeometryType.POINT);
         e.setUnivers(univers);
+        e.setXData(xdata);
         return e;
     }
 

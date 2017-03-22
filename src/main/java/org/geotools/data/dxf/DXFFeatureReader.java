@@ -16,6 +16,9 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.ArrayList;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -206,10 +209,27 @@ public class DXFFeatureReader implements FeatureReader {
                             ((ent instanceof DXFText) ? ((DXFText)ent)._align : 0f),
                             ((ent instanceof DXFText) ? ((DXFText)ent)._align2 : 0f),
                             new Integer(ent.isVisible() ? 1 : 0),
+                            formatXData(ent.getXData()),
                             ent.getClass().getSimpleName(),
                             ent,
                         }, Integer.toString(featureID++)));
         }
+    }
+    
+    private String formatXData(Map<String, List<String>> xdata) {
+        if (xdata == null)
+            return null;
+        
+        List<String> entries = new ArrayList<String>(xdata.size());
+        for (Entry<String, List<String>> entry : xdata.entrySet()) {
+            String value = '"' + entry.getKey() + "\":[";
+            List<String> quoted = new ArrayList<String>(entry.getValue().size());
+            for (String val : entry.getValue())
+                quoted.add('"' + val + '"');
+            value += String.join(",", quoted) + "]";
+            entries.add(value);
+        }
+        return String.join(",", entries);
     }
     
     public ReferencedEnvelope getBounds() {
@@ -270,6 +290,7 @@ public class DXFFeatureReader implements FeatureReader {
             ftb.add("align1", Float.class);
             ftb.add("align2", Float.class);
             ftb.add("visible", Integer.class);
+            ftb.add("xdata", String.class);
             ftb.add("class", String.class);
             ftb.add("entity", DXFEntity.class);
 

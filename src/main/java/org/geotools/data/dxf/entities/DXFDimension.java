@@ -3,6 +3,8 @@ package org.geotools.data.dxf.entities;
 import java.io.EOFException;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
@@ -45,6 +47,7 @@ public class DXFDimension extends DXFBlockReference {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -95,6 +98,9 @@ public class DXFDimension extends DXFBlockReference {
                 case COLOR: //"62"
                     c = cvp.getShortValue();
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -102,6 +108,7 @@ public class DXFDimension extends DXFBlockReference {
 
         d = new DXFDimension(angle, dimension, x, y, z, refBlock, nomBlock, l, visibility, c, lineType);
         d.setType(GeometryType.UNSUPPORTED);
+        d.setXData(xdata);
         d.setUnivers(univers);
 
         return d;

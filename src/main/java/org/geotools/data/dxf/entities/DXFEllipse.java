@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
 import org.geotools.data.dxf.header.DXFLayer;
@@ -56,6 +57,7 @@ public class DXFEllipse extends DXFEntity {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -115,6 +117,9 @@ public class DXFEllipse extends DXFEntity {
                 case Z_2: //"31"
                     z1 = cvp.getDoubleValue();
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -126,6 +131,7 @@ public class DXFEllipse extends DXFEntity {
                 new DXFPoint(x1, y1, z1, c, l, visibility, 1),
                 r, s, e, c, l, visibility, lineType);
         m.setType(GeometryType.POLYGON);
+        m.setXData(xdata);
         m.setUnivers(univers);
         return m;
     }

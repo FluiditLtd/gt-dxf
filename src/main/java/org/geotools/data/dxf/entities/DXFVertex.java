@@ -3,10 +3,14 @@ package org.geotools.data.dxf.entities;
 import java.io.EOFException;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.geotools.data.GeometryType;
+import org.geotools.data.dxf.header.DXFBlock;
 import org.geotools.data.dxf.parser.DXFUnivers;
 import org.geotools.data.dxf.header.DXFLayer;
+import org.geotools.data.dxf.header.DXFLineType;
 import org.geotools.data.dxf.parser.DXFCodeValuePair;
 import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFParseException;
@@ -33,6 +37,7 @@ public class DXFVertex extends DXFPoint {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -74,6 +79,9 @@ public class DXFVertex extends DXFPoint {
                 case VISIBILITY: //"60"
                     visibility = cvp.getShortValue();
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -82,6 +90,7 @@ public class DXFVertex extends DXFPoint {
 
         DXFVertex e = new DXFVertex(x, y, z, b, c, l, visibility);
         e.setType(GeometryType.POINT);
+        e.setXData(xdata);
         e.setUnivers(univers);
         return e;
     }
@@ -101,5 +110,5 @@ public class DXFVertex extends DXFPoint {
         s.append(visibility);
         s.append("]");
         return s.toString();
-    }
+    }  
 }

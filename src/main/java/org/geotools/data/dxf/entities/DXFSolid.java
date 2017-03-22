@@ -17,6 +17,7 @@ import org.geotools.data.dxf.parser.DXFParseException;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LinearRing;
+import java.util.Map;
 
 public class DXFSolid extends DXFEntity {
     public DXFPoint _p1 = new DXFPoint();
@@ -61,6 +62,7 @@ public class DXFSolid extends DXFEntity {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -132,6 +134,9 @@ public class DXFSolid extends DXFEntity {
                 case VISIBILITY: //"60"
                     visibility = cvp.getShortValue();
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -148,6 +153,7 @@ public class DXFSolid extends DXFEntity {
                 visibility,
                 lineType);
         e.setType(GeometryType.POLYGON);
+        e.setXData(xdata);
         e.setUnivers(univers);
         return e;
     }

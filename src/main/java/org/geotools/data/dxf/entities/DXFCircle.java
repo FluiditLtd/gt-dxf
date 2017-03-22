@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
 import org.geotools.data.dxf.header.DXFLayer;
@@ -46,6 +47,7 @@ public class DXFCircle extends DXFEntity {
         int sln = br.getLineNumber();
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -93,6 +95,9 @@ public class DXFCircle extends DXFEntity {
                 case DOUBLE_1: //"40"
                     r = cvp.getDoubleValue();
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -100,6 +105,7 @@ public class DXFCircle extends DXFEntity {
         }
         DXFCircle e = new DXFCircle(new DXFPoint(x, y, z, c, l, visibility, 1), r, lineType, c, l, visibility, thickness);
         e.setType(GeometryType.POLYGON);
+        e.setXData(xdata);
         e.setUnivers(univers);
         return e;
     }

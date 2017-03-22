@@ -5,6 +5,8 @@ import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
 import org.geotools.data.dxf.header.DXFLayer;
@@ -35,6 +37,7 @@ public class DXFSpLine extends DXFPolyline {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -75,6 +78,9 @@ public class DXFSpLine extends DXFPolyline {
                     lastCoord.setY(cvp.getDoubleValue());
                     lv.set(lastIndex, lastCoord);
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -82,6 +88,7 @@ public class DXFSpLine extends DXFPolyline {
 
         DXFSpLine e = new DXFSpLine(name, 4, c, l, lv, visibility, lineType, DXFTables.defaultThickness);
         e.setType(GeometryType.LINE);
+        e.setXData(xdata);
         e.setUnivers(univers);
         return e;
     }

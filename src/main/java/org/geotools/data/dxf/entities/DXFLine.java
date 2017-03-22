@@ -5,6 +5,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import java.io.EOFException;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
@@ -41,6 +43,7 @@ public class DXFLine extends DXFEntity {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -94,6 +97,9 @@ public class DXFLine extends DXFEntity {
                 case VISIBILITY: //"60"
                     visibility = cvp.getShortValue();
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -106,6 +112,7 @@ public class DXFLine extends DXFEntity {
                 lineType,
                 thickness,
                 visibility);
+        e.setXData(xdata);
         e.setType(GeometryType.LINE);
         e.setUnivers(univers);
         return e;

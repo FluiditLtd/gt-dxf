@@ -6,6 +6,8 @@ import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import java.awt.geom.Rectangle2D;
 import java.io.EOFException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,6 +74,7 @@ public class DXFText extends DXFEntity {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -159,6 +162,9 @@ public class DXFText extends DXFEntity {
                 case LINETYPE_NAME: //"6"
                     lineType = univers.findLType(cvp.getStringValue());
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
@@ -182,6 +188,7 @@ public class DXFText extends DXFEntity {
         if (!value.trim().isEmpty()) {
             DXFText e = new DXFText(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
             e.setType(GeometryType.POINT);
+            e.setXData(xdata);
             e.setUnivers(univers);
             return e;
         }

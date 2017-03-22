@@ -5,6 +5,7 @@ import java.io.EOFException;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import org.geotools.data.GeometryType;
 import org.geotools.data.dxf.parser.DXFUnivers;
 import org.geotools.data.dxf.header.DXFBlock;
@@ -46,6 +47,7 @@ public class DXFInsert extends DXFBlockReference {
 
         DXFCodeValuePair cvp = null;
         DXFGroupCode gc = null;
+        Map<String, List<String>> xdata = null;
 
         boolean doLoop = true;
         while (doLoop) {
@@ -103,12 +105,16 @@ public class DXFInsert extends DXFBlockReference {
                 case LINETYPE_NAME: //"6"
                     lineType = univers.findLType(cvp.getStringValue());
                     break;
+                case XDATA_APPLICATION_NAME:
+                    xdata = readXdata(cvp.getStringValue(), br, univers, xdata);
+                    break;
                 default:
                     break;
             }
         }
 
         m = new DXFInsert(x, y, z, nomBlock, refBlock, layer, visibility, color, lineType, angle);
+        m.setXData(xdata);
         m.setType(GeometryType.POINT);
         m.setUnivers(univers);
         m._xs = xscale;
