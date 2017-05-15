@@ -30,7 +30,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <geotools.version>16.1</geotools.version>
+        <geotools.version>17.0</geotools.version>
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
