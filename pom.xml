@@ -19,7 +19,7 @@
     <!-- =========================================================== -->
     <groupId>org.geotools</groupId>
     <artifactId>gt-dxf</artifactId>
-    <version>17.0</version>
+    <version>16.3</version>
     <packaging>jar</packaging>
     <name>dxf</name>
     <description>
@@ -30,7 +30,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <geotools.version>17.0</geotools.version>
+        <geotools.version>${project.version}</geotools.version>
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
