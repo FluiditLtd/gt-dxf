@@ -19,7 +19,7 @@
     <!-- =========================================================== -->
     <groupId>org.geotools</groupId>
     <artifactId>gt-dxf</artifactId>
-    <version>17.0</version>
+    <version>17.1</version>
     <packaging>jar</packaging>
     <name>dxf</name>
     <description>
@@ -30,8 +30,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <geotools.version>17.0</geotools.version>
+        <geotools.version>${project.version}</geotools.version>
         <maven.test.skip>true</maven.test.skip>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <licenses>
@@ -103,6 +105,11 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-referencing</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-data</artifactId>
             <version>${geotools.version}</version>
         </dependency>
         <dependency>
