@@ -323,8 +323,4 @@ public class DXFFeatureReader implements FeatureReader {
 
     public void close() throws IOException {
     }
-
-    public int getSize() {
-        return features.size();
-    }
 }

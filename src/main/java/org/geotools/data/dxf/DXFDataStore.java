@@ -3,28 +3,22 @@
  */
 package org.geotools.data.dxf;
 
+import org.geotools.data.AbstractFileDataStore;
+import org.geotools.data.FeatureReader;
+import org.geotools.data.FilteringFeatureReader;
+import org.geotools.data.GeometryType;
+import org.geotools.data.Query;
+import org.geotools.data.ServiceInfo;
+import org.geotools.data.Transaction;
+import org.geotools.data.dxf.parser.DXFParseException;
+import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.filter.Filter;
+
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.net.URL;
-
-import org.geotools.data.*;
-import org.geotools.data.dxf.parser.DXFParseException;
-
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.geotools.data.simple.SimpleFeatureSource;
-import org.geotools.data.store.ContentDataStore;
-import org.geotools.data.store.ContentEntry;
-import org.geotools.data.store.ContentFeatureSource;
-import org.geotools.data.store.ContentState;
-import org.geotools.feature.NameImpl;
-import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.Name;
-import org.opengis.filter.Filter;
 
 /**
  * DataStore for reading a DXF file produced by Autodesk.
@@ -41,7 +35,7 @@ import org.opengis.filter.Filter;
  *
  * @source $URL: http://svn.osgeo.org/geotools/branches/2.7.x/build/maven/javadoc/../../../modules/unsupported/dxf/src/main/java/org/geotools/data/dxf/DXFDataStore.java $
  */
-public class DXFDataStore extends ContentDataStore implements FileDataStore {
+public class DXFDataStore extends AbstractFileDataStore {
     private URL url;
     private FeatureReader featureReader;
     private String srs;
@@ -61,6 +55,21 @@ public class DXFDataStore extends ContentDataStore implements FileDataStore {
         this.srs = srs;
         this.targetSrs = targetSrs;
         this.transform = transform;
+    }
+
+    @Override
+    public ReferencedEnvelope getBounds(Query query) throws IOException {
+        if (query.getFilter().equals(Filter.INCLUDE)) {
+            FeatureReader reader = getFeatureReader("");
+            return ((DXFFeatureReader)reader).getBounds();
+        }
+        else
+            return null;
+    }
+    
+    public String[] getTypeNames() throws IOException {
+        //return GeometryType.getTypeNames(strippedFileName, GeometryType.LINE, GeometryType.POINT, GeometryType.POLYGON);
+        return GeometryType.getTypeNames(strippedFileName, GeometryType.ALL);
     }
 
     static String getURLTypeName(URL url) throws IOException {
@@ -94,6 +103,16 @@ public class DXFDataStore extends ContentDataStore implements FileDataStore {
         dxfInsertsFilter.add(filteredName);
     }
 
+    public SimpleFeatureType getSchema(String typeName) throws IOException {
+        // Update featureReader with typename and return SimpleFeatureType
+        return (SimpleFeatureType) getFeatureReader(typeName).getFeatureType();
+    }
+
+    @Override
+    public SimpleFeatureType getSchema() throws IOException {
+        return getSchema(typeName);
+    }
+
     public FeatureReader getFeatureReader(String typeName) throws IOException {
         // Update featureReader for this typename
         resetFeatureReader(typeName);
@@ -101,19 +120,27 @@ public class DXFDataStore extends ContentDataStore implements FileDataStore {
     }
 
     @Override
+    public FeatureReader getFeatureReader(String typeName, Query query) throws IOException {
+        return new FilteringFeatureReader(getFeatureReader(typeName), query.getFilter());        
+    }
+
+    @Override
     public FeatureReader getFeatureReader(Query query, Transaction transaction) throws IOException {
         return new FilteringFeatureReader(getFeatureReader(typeName), query.getFilter());
     }
 
+    @Override
     public FeatureReader getFeatureReader() throws IOException {
-        if (featureReader == null)
+        if (featureReader == null) {
             resetFeatureReader(typeName);
+        }
         return featureReader;
     }
 
     public void resetFeatureReader(String typeName) throws IOException {
-        if (typeName == null)
+        if (typeName == null) {
             typeName = "";
+        }
         this.typeName = typeName;
 
         // Get geometryType from typeName (GeometryType)(typeName - fileName)
@@ -138,49 +165,5 @@ public class DXFDataStore extends ContentDataStore implements FileDataStore {
         } catch (IOException ex) {
             return null;
         }
-    }
-
-    protected List<Name> createTypeNames() throws IOException {
-        LinkedList<Name> ret = new LinkedList<>();
-        for (String typeName : GeometryType.getTypeNames(strippedFileName, GeometryType.ALL))
-            ret.add(new NameImpl(typeName));
-        return ret;
-    }
-
-    protected ContentFeatureSource createFeatureSource(ContentEntry contentEntry) throws IOException {
-        String extension = typeName.replaceFirst(strippedFileName, "");
-        GeometryType geometryType = GeometryType.getTypeByExtension(extension);
-
-        return new DXFDataSource(url, srs, targetSrs, dxfInsertsFilter, transform, geometryType, contentEntry, Query.ALL);
-    }
-
-    @Override
-    public SimpleFeatureType getSchema() throws IOException {
-        return null;
-    }
-
-    @Override
-    public void updateSchema(SimpleFeatureType simpleFeatureType) throws IOException {
-
-    }
-
-    @Override
-    public SimpleFeatureSource getFeatureSource() throws IOException {
-        return new DXFDataSource(url, srs, targetSrs, dxfInsertsFilter, transform, GeometryType.ALL, ensureEntry(new NameImpl("")), Query.ALL);
-    }
-
-    @Override
-    public FeatureWriter<SimpleFeatureType, SimpleFeature> getFeatureWriter(Filter filter, Transaction transaction) throws IOException {
-        return null;
-    }
-
-    @Override
-    public FeatureWriter<SimpleFeatureType, SimpleFeature> getFeatureWriter(Transaction transaction) throws IOException {
-        return null;
-    }
-
-    @Override
-    public FeatureWriter<SimpleFeatureType, SimpleFeature> getFeatureWriterAppend(Transaction transaction) throws IOException {
-        return null;
     }
 }
