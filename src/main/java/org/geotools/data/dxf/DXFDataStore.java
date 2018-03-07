@@ -122,7 +122,7 @@ public class DXFDataStore extends ContentDataStore implements FileDataStore {
 
         if (featureReader == null) {
             try {
-                featureReader = new DXFFeatureReader(url, typeName, srs, targetSrs, type, dxfInsertsFilter, transform);
+                featureReader = new DXFFeatureReader(url, typeName, srs, targetSrs, geometryType, dxfInsertsFilter, transform);
             } catch (DXFParseException e) {
                 throw new IOException("DXF parse exception" + e.getLocalizedMessage());
             }
@@ -166,7 +166,7 @@ public class DXFDataStore extends ContentDataStore implements FileDataStore {
 
     @Override
     public SimpleFeatureSource getFeatureSource() throws IOException {
-        return new DXFDataSource(url, srs, targetSrs, dxfInsertsFilter, transform, ensureEntry(new NameImpl("")), GeometryType.ALL, Query.ALL);
+        return new DXFDataSource(url, srs, targetSrs, dxfInsertsFilter, transform, GeometryType.ALL, ensureEntry(new NameImpl("")), Query.ALL);
     }
 
     @Override
