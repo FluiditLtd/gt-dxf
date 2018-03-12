@@ -19,7 +19,7 @@
     <!-- =========================================================== -->
     <groupId>org.geotools</groupId>
     <artifactId>gt-dxf</artifactId>
-    <version>16.4</version>
+    <version>18.2</version>
     <packaging>jar</packaging>
     <name>dxf</name>
     <description>
@@ -32,6 +32,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <geotools.version>${project.version}</geotools.version>
         <maven.test.skip>true</maven.test.skip>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <licenses>
@@ -106,14 +108,9 @@
             <version>${geotools.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.vividsolutions</groupId>
-            <artifactId>jts</artifactId>
-            <version>1.13</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-data</artifactId>
+            <version>${geotools.version}</version>
         </dependency>
     </dependencies>
 

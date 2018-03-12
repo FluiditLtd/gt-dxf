@@ -3,21 +3,22 @@
  */
 package org.geotools.data.dxf;
 
-import java.awt.geom.AffineTransform;
-import java.io.IOException;
-import java.net.URL;
-import org.geotools.data.GeometryType;
-import org.geotools.data.dxf.parser.DXFParseException;
 import org.geotools.data.AbstractFileDataStore;
 import org.geotools.data.FeatureReader;
-import java.util.ArrayList;
 import org.geotools.data.FilteringFeatureReader;
+import org.geotools.data.GeometryType;
 import org.geotools.data.Query;
 import org.geotools.data.ServiceInfo;
 import org.geotools.data.Transaction;
+import org.geotools.data.dxf.parser.DXFParseException;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
+
+import java.awt.geom.AffineTransform;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * DataStore for reading a DXF file produced by Autodesk.
