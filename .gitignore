@@ -1,0 +1,17 @@
+.idea/
+.settings/
+nbproject/
+*.log
+*.iml
+.classpath
+.project
+nb-configuration.xml
+nbactions.xml
+effective.pom
+dependency-reduced-*
+pom.xml.versionsBackup
+rebel.xml
+target/
+bin/
+build/
+out/

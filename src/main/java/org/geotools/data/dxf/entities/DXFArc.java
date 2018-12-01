@@ -1,6 +1,6 @@
 package org.geotools.data.dxf.entities;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Coordinate;
 import java.io.EOFException;
 import java.io.IOException;
 

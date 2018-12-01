@@ -4,7 +4,7 @@
 package org.geotools.data.dxf;
 
 import org.geotools.data.dxf.parser.DXFParseException;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;

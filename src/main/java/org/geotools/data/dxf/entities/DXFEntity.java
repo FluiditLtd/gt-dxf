@@ -1,8 +1,8 @@
 package org.geotools.data.dxf.entities;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.algorithm.Angle;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.algorithm.Angle;
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.HashMap;

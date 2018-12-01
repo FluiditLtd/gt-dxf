@@ -14,9 +14,9 @@ import org.geotools.data.dxf.parser.DXFCodeValuePair;
 import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFParseException;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LinearRing;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.LinearRing;
 import java.util.Map;
 
 public class DXFSolid extends DXFEntity {
