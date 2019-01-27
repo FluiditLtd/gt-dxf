@@ -1,5 +1,16 @@
 package org.geotools.data.dxf.entities;
 
+import org.geotools.data.dxf.header.DXFBlockReference;
+import org.geotools.data.dxf.header.DXFLayer;
+import org.geotools.data.dxf.parser.DXFCodeValuePair;
+import org.geotools.data.dxf.parser.DXFColor;
+import org.geotools.data.dxf.parser.DXFConstants;
+import org.geotools.data.dxf.parser.DXFGroupCode;
+import org.geotools.data.dxf.parser.DXFLineNumberReader;
+import org.geotools.data.dxf.parser.DXFParseException;
+import org.geotools.data.dxf.parser.DXFUnivers;
+import org.geotools.database.GeometryType;
+import org.geotools.data.dxf.header.DXFLineType;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.algorithm.Angle;
@@ -9,18 +20,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.geotools.data.GeometryType;
-import org.geotools.data.dxf.header.DXFBlock;
-import org.geotools.data.dxf.header.DXFBlockReference;
-import org.geotools.data.dxf.header.DXFLayer;
-import org.geotools.data.dxf.header.DXFLineType;
-import org.geotools.data.dxf.parser.DXFCodeValuePair;
-import org.geotools.data.dxf.parser.DXFColor;
-import org.geotools.data.dxf.parser.DXFConstants;
-import org.geotools.data.dxf.parser.DXFGroupCode;
-import org.geotools.data.dxf.parser.DXFLineNumberReader;
-import org.geotools.data.dxf.parser.DXFParseException;
-import org.geotools.data.dxf.parser.DXFUnivers;
 
 
 public abstract class DXFEntity implements DXFConstants {

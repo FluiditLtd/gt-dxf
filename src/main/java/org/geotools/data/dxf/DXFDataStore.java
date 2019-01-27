@@ -3,14 +3,14 @@
  */
 package org.geotools.data.dxf;
 
-import org.geotools.data.AbstractFileDataStore;
+import org.geotools.data.dxf.parser.DXFParseException;
+import org.geotools.database.AbstractFileDataStore;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FilteringFeatureReader;
-import org.geotools.data.GeometryType;
+import org.geotools.database.GeometryType;
 import org.geotools.data.Query;
 import org.geotools.data.ServiceInfo;
 import org.geotools.data.Transaction;
-import org.geotools.data.dxf.parser.DXFParseException;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;

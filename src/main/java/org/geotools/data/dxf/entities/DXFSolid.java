@@ -1,18 +1,19 @@
 package org.geotools.data.dxf.entities;
 
+import org.geotools.data.dxf.header.DXFLayer;
+import org.geotools.data.dxf.parser.DXFCodeValuePair;
+import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
+import org.geotools.data.dxf.parser.DXFParseException;
+import org.geotools.data.dxf.parser.DXFUnivers;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.geotools.data.GeometryType;
-import org.geotools.data.dxf.parser.DXFUnivers;
-import org.geotools.data.dxf.header.DXFLayer;
+import org.geotools.database.GeometryType;
 import org.geotools.data.dxf.header.DXFLineType;
-import org.geotools.data.dxf.parser.DXFCodeValuePair;
-import org.geotools.data.dxf.parser.DXFGroupCode;
-import org.geotools.data.dxf.parser.DXFParseException;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
@@ -37,7 +38,7 @@ public class DXFSolid extends DXFEntity {
     }
 
     public DXFSolid(DXFPoint p1, DXFPoint p2, DXFPoint p3, DXFPoint p4,
-            double thickness, int c, DXFLayer l, int visibility, DXFLineType lineType) {
+                    double thickness, int c, DXFLayer l, int visibility, DXFLineType lineType) {
         super(c, l, visibility, lineType, thickness);
 
         _p1 = p1;

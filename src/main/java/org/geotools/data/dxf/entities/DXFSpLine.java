@@ -1,20 +1,22 @@
 package org.geotools.data.dxf.entities;
 
 import java.io.EOFException;
+
+import org.geotools.data.dxf.header.DXFLayer;
+import org.geotools.data.dxf.header.DXFTables;
+import org.geotools.data.dxf.parser.DXFCodeValuePair;
+import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
+import org.geotools.data.dxf.parser.DXFParseException;
+import org.geotools.data.dxf.parser.DXFUnivers;
+
 import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.geotools.data.GeometryType;
-import org.geotools.data.dxf.parser.DXFUnivers;
-import org.geotools.data.dxf.header.DXFLayer;
-import org.geotools.data.dxf.header.DXFTables;
+import org.geotools.database.GeometryType;
 import org.geotools.data.dxf.header.DXFLineType;
-import org.geotools.data.dxf.parser.DXFCodeValuePair;
-import org.geotools.data.dxf.parser.DXFGroupCode;
-import org.geotools.data.dxf.parser.DXFParseException;
 
 public class DXFSpLine extends DXFPolyline {
     public DXFPoint _a = new DXFPoint();

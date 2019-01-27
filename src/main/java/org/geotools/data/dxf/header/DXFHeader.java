@@ -5,13 +5,13 @@ import java.io.EOFException;
 import java.io.IOException;
 
 
+import org.geotools.data.dxf.entities.Point;
 import org.geotools.data.dxf.parser.DXFParseException;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import org.geotools.data.dxf.entities.DXFPoint;
 import org.geotools.data.dxf.parser.DXFCodeValuePair;
 import org.geotools.data.dxf.parser.DXFConstants;
 import org.geotools.data.dxf.parser.DXFGroupCode;
-import org.geotools.data.dxf.entities.Point;
 
 public class DXFHeader implements DXFConstants {
     public DXFPoint _LIMMIN;

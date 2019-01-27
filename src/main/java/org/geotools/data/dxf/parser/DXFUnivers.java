@@ -1,5 +1,13 @@
 package org.geotools.data.dxf.parser;
 
+import org.geotools.data.dxf.header.DXFBlock;
+import org.geotools.data.dxf.header.DXFBlockReference;
+import org.geotools.data.dxf.header.DXFBlocks;
+import org.geotools.data.dxf.header.DXFEntities;
+import org.geotools.data.dxf.header.DXFHeader;
+import org.geotools.data.dxf.header.DXFLayer;
+import org.geotools.data.dxf.header.DXFTables;
+import org.geotools.data.dxf.header.DXFLineType;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -11,14 +19,6 @@ import java.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.geotools.data.dxf.entities.DXFEntity;
-import org.geotools.data.dxf.header.DXFBlock;
-import org.geotools.data.dxf.header.DXFBlockReference;
-import org.geotools.data.dxf.header.DXFBlocks;
-import org.geotools.data.dxf.header.DXFEntities;
-import org.geotools.data.dxf.header.DXFHeader;
-import org.geotools.data.dxf.header.DXFLayer;
-import org.geotools.data.dxf.header.DXFLineType;
-import org.geotools.data.dxf.header.DXFTables;
 
 public class DXFUnivers implements DXFConstants {
     public static final PrecisionModel precisionModel = new PrecisionModel(PrecisionModel.FLOATING);

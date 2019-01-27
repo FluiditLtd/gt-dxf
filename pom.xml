@@ -19,7 +19,7 @@
     <!-- =========================================================== -->
     <groupId>org.geotools</groupId>
     <artifactId>gt-dxf</artifactId>
-    <version>20.1</version>
+    <version>21-M0</version>
     <packaging>jar</packaging>
     <name>dxf</name>
     <description>
@@ -86,6 +86,14 @@
             <name>Central</name>
             <url>http://repo1.maven.org/maven2/</url>
         </repository>
+        <repository>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+          <id>boundless</id>
+          <name>Boundless Maven Repository</name>
+          <url>http://repo.boundlessgeo.com/main</url>
+        </repository>	
     </repositories>  
 
     <!-- =========================================================== -->
@@ -94,22 +102,12 @@
     <dependencies>
         <dependency>
             <groupId>org.geotools</groupId>
-            <artifactId>gt-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
             <artifactId>gt-main</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-referencing</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-data</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

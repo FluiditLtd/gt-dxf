@@ -1,4 +1,4 @@
-package org.geotools.data;
+package org.geotools.database;
 
 /**
  *

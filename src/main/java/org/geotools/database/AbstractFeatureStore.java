@@ -1,7 +1,11 @@
-package org.geotools.data;
+package org.geotools.database;
 
+import org.geotools.data.DataSourceException;
+import org.geotools.data.FeatureReader;
+import org.geotools.data.FeatureWriter;
+import org.geotools.data.Transaction;
+import org.geotools.util.factory.Hints;
 import org.geotools.data.simple.SimpleFeatureStore;
-import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.IllegalAttributeException;

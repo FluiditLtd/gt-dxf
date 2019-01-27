@@ -9,13 +9,14 @@ import java.io.IOException;
 import java.util.Vector;
 
 
-import org.geotools.data.dxf.parser.DXFColor;
-import org.geotools.data.dxf.parser.DXFParseException;
-import org.geotools.data.dxf.parser.DXFUnivers;
-import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import org.geotools.data.dxf.entities.DXFEntity;
 import org.geotools.data.dxf.parser.DXFCodeValuePair;
+import org.geotools.data.dxf.parser.DXFColor;
+import org.geotools.data.dxf.parser.DXFConstants;
 import org.geotools.data.dxf.parser.DXFGroupCode;
+import org.geotools.data.dxf.parser.DXFLineNumberReader;
+import org.geotools.data.dxf.parser.DXFParseException;
+import org.geotools.data.dxf.parser.DXFUnivers;
 
 /**
  *
@@ -75,9 +76,9 @@ public class DXFBlockRecord extends DXFBlock {
             switch (gc) {
                 case TYPE:
                     String type = cvp.getStringValue();
-                    if (ENDBLK.equals(type)) {
+                    if (DXFConstants.ENDBLK.equals(type)) {
                         doLoop = false;
-                    } else if (ENDSEC.equals(type)) {
+                    } else if (DXFConstants.ENDSEC.equals(type)) {
                         // hack voor als ENDBLK ontbreekt
                         doLoop = false;
                         br.reset();

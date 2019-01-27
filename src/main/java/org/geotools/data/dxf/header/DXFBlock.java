@@ -12,7 +12,6 @@ import org.geotools.data.dxf.parser.DXFUnivers;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import org.geotools.data.dxf.entities.DXFEntity;
 import org.geotools.data.dxf.entities.DXFPoint;
-import org.geotools.data.dxf.entities.DXFInsert;
 import org.geotools.data.dxf.parser.DXFCodeValuePair;
 import org.geotools.data.dxf.parser.DXFConstants;
 import org.geotools.data.dxf.parser.DXFGroupCode;

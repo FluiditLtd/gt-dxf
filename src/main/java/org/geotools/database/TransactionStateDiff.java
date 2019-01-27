@@ -1,7 +1,16 @@
-package org.geotools.data;
+package org.geotools.database;
 
+import org.geotools.data.DataSourceException;
+import org.geotools.data.Diff;
+import org.geotools.data.DiffFeatureReader;
+import org.geotools.data.DiffFeatureWriter;
+import org.geotools.data.FeatureReader;
+import org.geotools.data.FeatureWriter;
+import org.geotools.data.FilteringFeatureReader;
+import org.geotools.data.Query;
+import org.geotools.data.Transaction;
+import org.geotools.util.factory.Hints;
 import org.locationtech.jts.geom.Geometry;
-import org.geotools.factory.Hints;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.feature.GeometryAttribute;
 import org.opengis.feature.IllegalAttributeException;

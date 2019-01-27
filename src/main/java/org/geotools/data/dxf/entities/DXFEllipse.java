@@ -1,9 +1,18 @@
 package org.geotools.data.dxf.entities;
 
+import org.geotools.data.dxf.header.DXFLayer;
+import org.geotools.data.dxf.header.DXFTables;
+import org.geotools.data.dxf.parser.DXFCodeValuePair;
+import org.geotools.data.dxf.parser.DXFGroupCode;
+import org.geotools.data.dxf.parser.DXFLineNumberReader;
+import org.geotools.data.dxf.parser.DXFParseException;
+import org.geotools.data.dxf.parser.DXFUnivers;
+import org.geotools.database.GeometryType;
+import org.geotools.data.dxf.header.DXFLineType;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.LinearRing;
-import org.geotools.data.dxf.parser.DXFLineNumberReader;
+
 import java.io.EOFException;
 import java.io.IOException;
 
@@ -11,14 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.geotools.data.GeometryType;
-import org.geotools.data.dxf.parser.DXFUnivers;
-import org.geotools.data.dxf.header.DXFLayer;
-import org.geotools.data.dxf.header.DXFLineType;
-import org.geotools.data.dxf.header.DXFTables;
-import org.geotools.data.dxf.parser.DXFCodeValuePair;
-import org.geotools.data.dxf.parser.DXFGroupCode;
-import org.geotools.data.dxf.parser.DXFParseException;
 
 public class DXFEllipse extends DXFEntity {
     public DXFPoint _point1 = new DXFPoint();

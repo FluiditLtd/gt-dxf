@@ -1,10 +1,19 @@
-package org.geotools.data;
+package org.geotools.database;
 
+import org.geotools.data.DataSourceException;
+import org.geotools.data.DataStore;
+import org.geotools.data.DefaultFeatureResults;
+import org.geotools.data.DefaultQuery;
+import org.geotools.data.Diff;
+import org.geotools.data.Query;
+import org.geotools.data.QueryCapabilities;
+import org.geotools.data.ResourceInfo;
+import org.geotools.data.Transaction;
+import org.geotools.util.factory.Hints;
 import org.locationtech.jts.geom.Envelope;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.store.EmptyFeatureCollection;
-import org.geotools.factory.Hints;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.simple.SimpleFeatureType;

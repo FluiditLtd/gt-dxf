@@ -1,5 +1,26 @@
-package org.geotools.data;
+package org.geotools.database;
 
+import org.geotools.data.DataSourceException;
+import org.geotools.data.DataStore;
+import org.geotools.data.DataUtilities;
+import org.geotools.data.DefaultServiceInfo;
+import org.geotools.data.Diff;
+import org.geotools.data.DiffFeatureReader;
+import org.geotools.data.EmptyFeatureReader;
+import org.geotools.data.EmptyFeatureWriter;
+import org.geotools.data.FeatureListener;
+import org.geotools.data.FeatureListenerManager;
+import org.geotools.data.FeatureReader;
+import org.geotools.data.FeatureWriter;
+import org.geotools.data.FilteringFeatureReader;
+import org.geotools.data.FilteringFeatureWriter;
+import org.geotools.data.InProcessLockingManager;
+import org.geotools.data.LockingManager;
+import org.geotools.data.MaxFeatureReader;
+import org.geotools.data.Query;
+import org.geotools.data.ReTypeFeatureReader;
+import org.geotools.data.ServiceInfo;
+import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.FeatureTypes;
 import org.geotools.feature.NameImpl;

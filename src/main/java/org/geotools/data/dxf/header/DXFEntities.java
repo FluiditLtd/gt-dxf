@@ -4,6 +4,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.Vector;
 
+import org.geotools.data.dxf.entities.DXF3DFace;
 import org.geotools.data.dxf.entities.DXFArc;
 import org.geotools.data.dxf.entities.DXFCircle;
 import org.geotools.data.dxf.entities.DXFDimension;
@@ -12,6 +13,7 @@ import org.geotools.data.dxf.entities.DXFEntity;
 import org.geotools.data.dxf.entities.DXFInsert;
 import org.geotools.data.dxf.entities.DXFLine;
 import org.geotools.data.dxf.entities.DXFLwPolyline;
+import org.geotools.data.dxf.entities.DXFMText;
 import org.geotools.data.dxf.entities.DXFPoint;
 import org.geotools.data.dxf.entities.DXFPolyline;
 import org.geotools.data.dxf.entities.DXFSolid;
@@ -24,7 +26,8 @@ import org.geotools.data.dxf.parser.DXFConstants;
 import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import org.geotools.data.dxf.parser.DXFUnivers;
-import org.geotools.data.dxf.entities.*;
+import org.geotools.data.dxf.entities.DXFAttrib;
+import org.geotools.data.dxf.entities.DXFLeader;
 
 public class DXFEntities implements DXFConstants {
     public Vector<DXFEntity> theEntities = new Vector<DXFEntity>();

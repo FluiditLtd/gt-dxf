@@ -3,7 +3,14 @@
  */
 package org.geotools.data.dxf;
 
+import org.geotools.data.dxf.entities.DXFEntity;
+import org.geotools.data.dxf.entities.DXFInsert;
+import org.geotools.data.dxf.entities.DXFText;
+import org.geotools.data.dxf.parser.DXFColor;
+import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import org.geotools.data.dxf.parser.DXFParseException;
+import org.geotools.data.dxf.parser.DXFUnivers;
+import org.geotools.database.GeometryType;
 import org.locationtech.jts.geom.Geometry;
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
@@ -24,11 +31,7 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
-import org.geotools.data.GeometryType;
-import org.geotools.data.dxf.entities.DXFEntity;
-import org.geotools.data.dxf.entities.DXFText;
-import org.geotools.data.dxf.parser.DXFUnivers;
-import org.geotools.data.dxf.parser.DXFLineNumberReader;
+
 import org.geotools.data.DataSourceException;
 import org.geotools.data.FeatureReader;
 
@@ -39,8 +42,6 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import org.geotools.data.DefaultServiceInfo;
 import org.geotools.data.ServiceInfo;
-import org.geotools.data.dxf.entities.DXFInsert;
-import org.geotools.data.dxf.parser.DXFColor;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.DirectPosition2D;

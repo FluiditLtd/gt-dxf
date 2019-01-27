@@ -1,5 +1,12 @@
-package org.geotools.data;
+package org.geotools.database;
 
+import org.geotools.data.DataSourceException;
+import org.geotools.data.DefaultQuery;
+import org.geotools.data.FeatureLock;
+import org.geotools.data.FeatureLockException;
+import org.geotools.data.FeatureLocking;
+import org.geotools.data.LockingManager;
+import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureLocking;
 import org.opengis.feature.simple.SimpleFeature;

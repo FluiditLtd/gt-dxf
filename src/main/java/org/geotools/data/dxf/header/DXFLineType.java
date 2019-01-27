@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.Vector;
 
 
-import org.geotools.data.dxf.parser.DXFParseException;
 import org.geotools.data.dxf.parser.DXFCodeValuePair;
 import org.geotools.data.dxf.parser.DXFGroupCode;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
+import org.geotools.data.dxf.parser.DXFParseException;
 
 public class DXFLineType {
     public static final String DEFAULT_NAME = "default";

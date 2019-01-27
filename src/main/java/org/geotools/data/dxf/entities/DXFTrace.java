@@ -1,11 +1,12 @@
 package org.geotools.data.dxf.entities;
 
+import org.geotools.data.dxf.header.DXFLayer;
 import org.geotools.data.dxf.parser.DXFLineNumberReader;
+import org.geotools.data.dxf.parser.DXFUnivers;
+
 import java.io.IOException;
 
-import org.geotools.data.GeometryType;
-import org.geotools.data.dxf.parser.DXFUnivers;
-import org.geotools.data.dxf.header.DXFLayer;
+import org.geotools.database.GeometryType;
 import org.geotools.data.dxf.header.DXFLineType;
 
 public class DXFTrace extends DXFSolid {

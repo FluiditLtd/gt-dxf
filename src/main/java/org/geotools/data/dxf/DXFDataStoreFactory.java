@@ -1,4 +1,4 @@
-/*
+/*0
  * $Id: DXFDataStoreFactory.java Matthijs $
  */
 
@@ -20,17 +20,16 @@ import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 
-/**
- * @author Matthijs Laan, B3Partners
- *
- * @source $URL: http://svn.osgeo.org/geotools/branches/2.7.x/build/maven/javadoc/../../../modules/unsupported/dxf/src/main/java/org/geotools/data/dxf/DXFDataStoreFactory.java $
- */
-public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
-    public static final DataStoreFactorySpi.Param PARAM_URL = new Param("url", URL.class, "url to a .dxf file");    
-    public static final DataStoreFactorySpi.Param PARAM_SRS = new Param("srs", String.class, "srs for the .dxf file");    
-    public static final DataStoreFactorySpi.Param PARAM_TARGET_SRS = new Param("target srs", String.class, "target srs; optional; used for converting text rotation angles");    
-    public static final DataStoreFactorySpi.Param PARAM_AFFINE_TRANSFORM = new Param("transform", AffineTransform.class, "affine transform performed to the geometries");
-    
+public class DXFDataStoreFactory {
+    public static final DataStoreFactorySpi.Param PARAM_URL = new DataStoreFactorySpi.Param("url", URL.class, "url to a .dxf file");
+    public static final DataStoreFactorySpi.Param PARAM_SRS = new DataStoreFactorySpi.Param("srs", String.class, "srs for the .dxf file");
+    public static final DataStoreFactorySpi.Param PARAM_TARGET_SRS = new DataStoreFactorySpi.Param("target srs", String.class, "target srs; optional; used for converting text rotation angles");
+    public static final DataStoreFactorySpi.Param PARAM_AFFINE_TRANSFORM = new DataStoreFactorySpi.Param("transform", AffineTransform.class, "affine transform performed to the geometries");
+
+    public DXFDataStoreFactory() {
+
+    }
+
     public String getDisplayName() {
         return "DXF File";
     }
@@ -85,7 +84,7 @@ public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
         }
         else
             result = false;
-        
+
         if (result && params.containsKey(PARAM_TARGET_SRS.key)) {
             try {
                 String srs = (String) PARAM_TARGET_SRS.lookUp(params);
@@ -108,8 +107,8 @@ public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
         return true;
     }
 
-    public Param[] getParametersInfo() {
-        return new Param[] {PARAM_URL, PARAM_SRS, PARAM_TARGET_SRS, PARAM_AFFINE_TRANSFORM};
+    public DataStoreFactorySpi.Param[] getParametersInfo() {
+        return new DataStoreFactorySpi.Param[] {PARAM_URL, PARAM_SRS, PARAM_TARGET_SRS, PARAM_AFFINE_TRANSFORM};
     }
 
     public Map getImplementationHints() {
@@ -124,13 +123,13 @@ public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
     public FileDataStore createDataStore(URL url) throws IOException {
         Map params = new HashMap();
         params.put(PARAM_URL.key, url);
-        
+
         boolean isLocal = url.getProtocol().equalsIgnoreCase("file");
         if(isLocal && !(new File(url.getFile()).exists())){
             throw new UnsupportedOperationException("Specified DXF file \"" + url + "\" does not exist, this plugin is read-only so no new file will be created");
         } else {
             return createDataStore(params);
-        }        
+        }
     }
 
     public FileDataStore createDataStore(Map params) throws IOException {
