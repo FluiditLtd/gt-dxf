@@ -20,7 +20,7 @@ import org.geotools.referencing.CRS;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 
-public class DXFDataStoreFactory {
+public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
     public static final DataStoreFactorySpi.Param PARAM_URL = new DataStoreFactorySpi.Param("url", URL.class, "url to a .dxf file");
     public static final DataStoreFactorySpi.Param PARAM_SRS = new DataStoreFactorySpi.Param("srs", String.class, "srs for the .dxf file");
     public static final DataStoreFactorySpi.Param PARAM_TARGET_SRS = new DataStoreFactorySpi.Param("target srs", String.class, "target srs; optional; used for converting text rotation angles");
