@@ -97,9 +97,8 @@ public class DXFMText extends DXFText {
                     z2 = cvp.getDoubleValue();
                     rotation = Double.NaN;
                     break;                    
-                case TEXT_OR_NAME_2: //"3"
+                case TEXT_OR_NAME_2: { //"3"
                     String temp = cvp.getStringValue();
-                    temp = cvp.getStringValue();
                     if (temp.startsWith("{") && temp.endsWith("}") && temp.contains("|")) {
                         temp = temp.substring(1, temp.length() - 1);
                         temp.substring(temp.lastIndexOf('|'));
@@ -109,16 +108,19 @@ public class DXFMText extends DXFText {
                     temp = processText2(temp);
                     value += temp;
                     break;
-                case TEXT: //"1"                    
-                    value += cvp.getStringValue();
-                    if (value.startsWith("{") && value.endsWith("}") && value.contains("|")) {
-                        value = value.substring(1, value.length() - 1);
-                        value.substring(value.lastIndexOf('|'));
+                }
+                case TEXT: { //"1"
+                    String temp = cvp.getStringValue();
+                    if (temp.startsWith("{") && temp.endsWith("}") && temp.contains("|")) {
+                        temp = temp.substring(1, temp.length() - 1);
+                        temp.substring(temp.lastIndexOf('|'));
                     }
-                    value = value.replace("\\P", "\n");
-                    value = processText(value);
-                    value = processText2(value);
+                    temp = temp.replace("\\P", "\n");
+                    temp = processText(temp);
+                    temp = processText2(temp);
+                    value += temp;
                     break;
+                }
                 case ANGLE_1: //"50"
                     rotation = Math.toDegrees(cvp.getDoubleValue());
                     x2 = Double.NaN;
@@ -178,7 +180,7 @@ public class DXFMText extends DXFText {
             if (Double.isNaN(x2) || Double.isNaN(y2))
                 rotation = 0;
             else
-                rotation = Math.toDegrees(Math.atan2(y2, x2));
+                rotation = Math.toDegrees(Math.atan2(y2 - y, x2 - x));
         }
         
         value = value.replace("(?m)^\\s*$", ""); 
