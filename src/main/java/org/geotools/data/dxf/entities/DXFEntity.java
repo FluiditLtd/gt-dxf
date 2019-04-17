@@ -285,6 +285,7 @@ public abstract class DXFEntity implements DXFConstants {
                     xdata = addXdata(application, Double.toString(cvp.getDoubleValue()), xdata);
                     break;
                 default:
+                    br.reset();
                     doLoop = false;
                     break;
             }
