@@ -104,9 +104,8 @@ public class DXFText extends DXFEntity {
                 case Z_1: //"30"
                     z = cvp.getDoubleValue();
                     break;
-                case TEXT_OR_NAME_2: //"3"
+                case TEXT_OR_NAME_2: { //"3"
                     String temp = cvp.getStringValue();
-                    temp = cvp.getStringValue();
                     if (temp.startsWith("{") && temp.endsWith("}") && temp.contains("|")) {
                         temp = temp.substring(1, temp.length() - 1);
                         temp.substring(temp.lastIndexOf('|'));
@@ -116,16 +115,19 @@ public class DXFText extends DXFEntity {
                     temp = processText2(temp);
                     value += temp;
                     break;
-                case TEXT: //"1"
-                    value = cvp.getStringValue();
-                    if (value.startsWith("{") && value.endsWith("}") && value.contains("|")) {
-                        value = value.substring(1, value.length() - 1);
-                        value.substring(value.lastIndexOf('|'));
+                }
+                case TEXT: { //"1"
+                    String temp = cvp.getStringValue();
+                    if (temp.startsWith("{") && temp.endsWith("}") && temp.contains("|")) {
+                        temp = temp.substring(1, temp.length() - 1);
+                        temp.substring(temp.lastIndexOf('|'));
                     }
-                    value = value.replace("\\P", "\n");
-                    value = processText(value);
-                    value = processText2(value);
+                    temp = temp.replace("\\P", "\n");
+                    temp = processText(temp);
+                    temp = processText2(temp);
+                    value += temp;
                     break;
+                }
                 case ANGLE_1: //"50"
                     rotation = cvp.getDoubleValue();
                     break;
@@ -134,12 +136,6 @@ public class DXFText extends DXFEntity {
                     break;
                 case DOUBLE_1: //"40"
                     height = cvp.getDoubleValue() + 1;
-                    break;
-                case ANGLE_2: //"51"
-                    angle = cvp.getDoubleValue();
-                    break;
-                case DOUBLE_2: //"41"
-                    zoomfactor = cvp.getDoubleValue();
                     break;
                 case INT_3: //"72"
                     align = cvp.getShortValue();
@@ -170,26 +166,30 @@ public class DXFText extends DXFEntity {
             }
 
         }
-        
-        // Aligned and fit are the same thing as left
-        if (align == 3 || align == 5)
-            align = 0;
-        // Treat middle as center
-        else if (align == 4)
-            align = 1;
-        
-        align2--;
-        if (align2 < 0)
-            align2 = 0;
-        align /= 2f;
-        align2 /= 2f;
-        
-        value = value.replace("(?m)^\\s*$", ""); 
+
+        switch ((int)align) {
+            case 1:
+            case 2:
+            case 3:
+                align2 = 1;
+                break;
+            case 4:
+            case 5:
+            case 6:
+                align2 = 0.5f;
+                break;
+            default:
+                align2 = 0f;
+                break;
+        }
+        align = 0;
+
+        value = value.replace("(?m)^\\s*$", "");
         if (!value.trim().isEmpty()) {
             DXFText e = new DXFText(x, y, z, value.trim(), rotation, thickness, height, align, align2, style, c, l, angle, zoomfactor, visibility, lineType);
             e.setType(GeometryType.POINT);
-            e.setXData(xdata);
             e.setUnivers(univers);
+            e.setXData(xdata);
             return e;
         }
         else
