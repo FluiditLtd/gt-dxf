@@ -185,6 +185,7 @@ public class DXFLwPolyline extends DXFEntity {
                     b = cvp.getDoubleValue();
                     break;
                 default:
+                    doLoop = false;
                     break;
             }
 
