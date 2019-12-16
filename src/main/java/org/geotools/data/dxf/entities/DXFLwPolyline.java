@@ -185,6 +185,19 @@ public class DXFLwPolyline extends DXFEntity {
                     b = cvp.getDoubleValue();
                     break;
                 default:
+                    if (xFound && yFound) {
+                        DXFLwVertex e = new DXFLwVertex(x, y, z, b);
+                        theVertices.add(e);
+                        xFound = false;
+                        yFound = false;
+                        zFound = false;
+                        x = 0;
+                        y = 0;
+                        z = 0;
+                        b = 0;
+                    }
+
+                    br.reset();
                     doLoop = false;
                     break;
             }
