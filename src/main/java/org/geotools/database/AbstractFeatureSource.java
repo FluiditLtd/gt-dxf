@@ -3,7 +3,6 @@ package org.geotools.database;
 import org.geotools.data.DataSourceException;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultFeatureResults;
-import org.geotools.data.DefaultQuery;
 import org.geotools.data.Diff;
 import org.geotools.data.Query;
 import org.geotools.data.QueryCapabilities;
@@ -43,7 +42,7 @@ public abstract class AbstractFeatureSource implements SimpleFeatureSource {
     public abstract DataStore getDataStore();
 
     public Name getName() {
-        return ((SimpleFeatureType)this.getSchema()).getName();
+        return this.getSchema().getName();
     }
 
     public AbstractFeatureSource(Set hints) {
@@ -58,11 +57,11 @@ public abstract class AbstractFeatureSource implements SimpleFeatureSource {
 
     public ResourceInfo getInfo() {
         return new ResourceInfo() {
-            final Set<String> words = new HashSet();
+            final Set<String> words = new HashSet<>();
 
             {
                 this.words.add("features");
-                this.words.add(((SimpleFeatureType)AbstractFeatureSource.this.getSchema()).getTypeName());
+                this.words.add(AbstractFeatureSource.this.getSchema().getTypeName());
             }
 
             public ReferencedEnvelope getBounds() {
@@ -74,7 +73,7 @@ public abstract class AbstractFeatureSource implements SimpleFeatureSource {
             }
 
             public CoordinateReferenceSystem getCRS() {
-                return ((SimpleFeatureType)AbstractFeatureSource.this.getSchema()).getCoordinateReferenceSystem();
+                return AbstractFeatureSource.this.getSchema().getCoordinateReferenceSystem();
             }
 
             public String getDescription() {
@@ -86,22 +85,21 @@ public abstract class AbstractFeatureSource implements SimpleFeatureSource {
             }
 
             public String getName() {
-                return ((SimpleFeatureType)AbstractFeatureSource.this.getSchema()).getTypeName();
+                return AbstractFeatureSource.this.getSchema().getTypeName();
             }
 
             public URI getSchema() {
-                Name name = ((SimpleFeatureType)AbstractFeatureSource.this.getSchema()).getName();
+                Name name = AbstractFeatureSource.this.getSchema().getName();
 
                 try {
-                    URI namespace = new URI(name.getNamespaceURI());
-                    return namespace;
+                    return new URI(name.getNamespaceURI());
                 } catch (URISyntaxException var4) {
                     return null;
                 }
             }
 
             public String getTitle() {
-                Name name = ((SimpleFeatureType)AbstractFeatureSource.this.getSchema()).getName();
+                Name name = AbstractFeatureSource.this.getSchema().getName();
                 return name.getLocalPart();
             }
         };
@@ -116,10 +114,10 @@ public abstract class AbstractFeatureSource implements SimpleFeatureSource {
     }
 
     public SimpleFeatureCollection getFeatures(Query query) throws IOException {
-        SimpleFeatureType schema = (SimpleFeatureType)this.getSchema();
+        SimpleFeatureType schema = this.getSchema();
         String typeName = schema.getTypeName();
         if (query.getTypeName() == null) {
-            DefaultQuery defaultQuery = new DefaultQuery(query);
+            Query defaultQuery = new Query(query);
             defaultQuery.setTypeName(typeName);
         } else if (!typeName.equals(query.getTypeName())) {
             return new EmptyFeatureCollection(schema);
@@ -130,34 +128,34 @@ public abstract class AbstractFeatureSource implements SimpleFeatureSource {
             throw new DataSourceException("DataStore cannot provide the requested sort order");
         } else {
             SimpleFeatureCollection collection = new DefaultFeatureResults(this, query);
-            return ((SimpleFeatureType)collection.getSchema()).getGeometryDescriptor() == null ? collection : collection;
+            return collection.getSchema().getGeometryDescriptor() == null ? collection : collection;
         }
     }
 
     public SimpleFeatureCollection getFeatures(Filter filter) throws IOException {
-        return this.getFeatures((Query)(new DefaultQuery(((SimpleFeatureType)this.getSchema()).getTypeName(), filter)));
+        return this.getFeatures(new Query(this.getSchema().getTypeName(), filter));
     }
 
     public SimpleFeatureCollection getFeatures() throws IOException {
-        return this.getFeatures((Filter)Filter.INCLUDE);
+        return this.getFeatures(Filter.INCLUDE);
     }
 
     public ReferencedEnvelope getBounds() throws IOException {
-        return this.getBounds((Query)(this.getSchema() == null ? Query.ALL : new DefaultQuery(((SimpleFeatureType)this.getSchema()).getTypeName())));
+        return this.getBounds((this.getSchema() == null ? Query.ALL : new Query(this.getSchema().getTypeName())));
     }
 
     public ReferencedEnvelope getBounds(Query query) throws IOException {
         if (query.getFilter() == Filter.EXCLUDE) {
-            return new ReferencedEnvelope(new Envelope(), ((SimpleFeatureType)this.getSchema()).getCoordinateReferenceSystem());
+            return new ReferencedEnvelope(new Envelope(), this.getSchema().getCoordinateReferenceSystem());
         } else {
             DataStore dataStore = this.getDataStore();
-            return dataStore != null && dataStore instanceof AbstractDataStore ? ((AbstractDataStore)dataStore).getBounds(this.namedQuery(query)) : null;
+            return dataStore instanceof AbstractDataStore ? ((AbstractDataStore)dataStore).getBounds(this.namedQuery(query)) : null;
         }
     }
 
     protected Query namedQuery(Query query) {
-        String typeName = ((SimpleFeatureType)this.getSchema()).getTypeName();
-        return (Query)(query.getTypeName() != null && query.getTypeName().equals(typeName) ? query : new DefaultQuery(typeName, query.getFilter(), query.getMaxFeatures(), query.getPropertyNames(), query.getHandle()));
+        String typeName = this.getSchema().getTypeName();
+        return query.getTypeName() != null && query.getTypeName().equals(typeName) ? query : new Query(typeName, query.getFilter(), query.getMaxFeatures(), query.getPropertyNames(), query.getHandle());
     }
 
     public int getCount(Query query) throws IOException {
@@ -165,7 +163,7 @@ public abstract class AbstractFeatureSource implements SimpleFeatureSource {
             return 0;
         } else {
             DataStore dataStore = this.getDataStore();
-            if (dataStore != null && dataStore instanceof AbstractDataStore) {
+            if (dataStore instanceof AbstractDataStore) {
                 Transaction t = this.getTransaction();
                 int nativeCount = ((AbstractDataStore)dataStore).getCount(this.namedQuery(query));
                 if (nativeCount == -1) {

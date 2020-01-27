@@ -8,7 +8,6 @@ import org.geotools.util.factory.Hints;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.feature.IllegalAttributeException;
 import org.geotools.feature.NameImpl;
 import org.geotools.filter.identity.FeatureIdImpl;
 import org.opengis.feature.simple.SimpleFeature;
@@ -220,7 +219,7 @@ public abstract class AbstractFeatureStore extends AbstractFeatureSource impleme
 
                 try {
                     newFeature.setAttributes(feature.getAttributes());
-                } catch (IllegalAttributeException var11) {
+                } catch (org.opengis.feature.IllegalAttributeException var11) {
                     throw new DataSourceException("Could not create " + typeName + " out of provided feature: " + feature.getID(), var11);
                 }
             }

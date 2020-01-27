@@ -1,12 +1,11 @@
 package org.geotools.database;
 
 import org.geotools.data.DataSourceException;
-import org.geotools.data.DefaultQuery;
+import org.geotools.data.Query;
 import org.geotools.data.FeatureLock;
 import org.geotools.data.FeatureLockException;
 import org.geotools.data.FeatureLocking;
 import org.geotools.data.LockingManager;
-import org.geotools.data.Query;
 import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureLocking;
 import org.opengis.feature.simple.SimpleFeature;
@@ -38,11 +37,11 @@ public abstract class AbstractFeatureLocking extends AbstractFeatureStore implem
     }
 
     public int lockFeatures() throws IOException {
-        return this.lockFeatures((Filter)Filter.INCLUDE);
+        return this.lockFeatures(Filter.INCLUDE);
     }
 
     public int lockFeatures(Filter filter) throws IOException {
-        return this.lockFeatures((Query)(new DefaultQuery(((SimpleFeatureType)this.getSchema()).getTypeName(), filter)));
+        return this.lockFeatures(new Query(this.getSchema().getTypeName(), filter));
     }
 
     public int lockFeatures(Query query) throws IOException {
@@ -57,7 +56,7 @@ public abstract class AbstractFeatureLocking extends AbstractFeatureStore implem
             try {
                 while(reader.hasNext()) {
                     try {
-                        SimpleFeature feature = (SimpleFeature)reader.next();
+                        SimpleFeature feature = reader.next();
                         lockingManager.lockFeatureID(typeName, feature.getID(), this.getTransaction(), this.featureLock);
                         ++count;
                     } catch (FeatureLockException var12) {
@@ -75,11 +74,11 @@ public abstract class AbstractFeatureLocking extends AbstractFeatureStore implem
     }
 
     public void unLockFeatures() throws IOException {
-        this.unLockFeatures((Filter)Filter.INCLUDE);
+        this.unLockFeatures(Filter.INCLUDE);
     }
 
     public void unLockFeatures(Filter filter) throws IOException {
-        this.unLockFeatures((Query)(new DefaultQuery(((SimpleFeatureType)this.getSchema()).getTypeName(), filter)));
+        this.unLockFeatures(new Query(this.getSchema().getTypeName(), filter));
     }
 
     public void unLockFeatures(Query query) throws IOException {
@@ -93,7 +92,7 @@ public abstract class AbstractFeatureLocking extends AbstractFeatureStore implem
             try {
                 while(reader.hasNext()) {
                     try {
-                        SimpleFeature feature = (SimpleFeature)reader.next();
+                        SimpleFeature feature = reader.next();
                         lockingManager.unLockFeatureID(typeName, feature.getID(), this.getTransaction(), this.featureLock);
                     } catch (NoSuchElementException var10) {
                         throw new DataSourceException("Problem with " + query.getHandle() + " while locking", var10);
