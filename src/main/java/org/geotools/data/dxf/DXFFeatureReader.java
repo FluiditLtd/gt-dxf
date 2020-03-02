@@ -85,10 +85,10 @@ public class DXFFeatureReader implements FeatureReader {
             this.transform = new AffineTransform2D(transform);
 
         try {
-            cis = url.openStream();
+            cis = new BufferedInputStream(url.openStream(), 64 * 1024);
             cis.mark(9192);
             try {
-                GZIPInputStream gzip = new GZIPInputStream(cis);
+                GZIPInputStream gzip = new GZIPInputStream(cis, 64 * 1024);
                 cis = gzip;
             } catch (IOException ex) {
                 try {
