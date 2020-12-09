@@ -19,7 +19,7 @@
     <!-- =========================================================== -->
     <groupId>org.geotools</groupId>
     <artifactId>gt-dxf</artifactId>
-    <version>24.0</version>
+    <version>24.1</version>
     <packaging>jar</packaging>
     <name>dxf</name>
     <description>
