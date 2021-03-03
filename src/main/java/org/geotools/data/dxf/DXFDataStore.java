@@ -17,6 +17,7 @@ import org.opengis.filter.Filter;
 
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -36,6 +37,7 @@ import java.util.ArrayList;
  * @source $URL: http://svn.osgeo.org/geotools/branches/2.7.x/build/maven/javadoc/../../../modules/unsupported/dxf/src/main/java/org/geotools/data/dxf/DXFDataStore.java $
  */
 public class DXFDataStore extends AbstractFileDataStore {
+    private InputStream stream;
     private URL url;
     private FeatureReader featureReader;
     private String srs;
@@ -46,10 +48,15 @@ public class DXFDataStore extends AbstractFileDataStore {
     private AffineTransform transform;
 
     public DXFDataStore(URL url, String srs, AffineTransform transform) throws IOException {
-        this(url, srs, null, transform);
+        this(url, null, srs, null, transform);
     }
 
-    public DXFDataStore(URL url, String srs, String targetSrs, AffineTransform transform) throws IOException {
+    public DXFDataStore(InputStream stream, String srs, AffineTransform transform) throws IOException {
+        this(null, stream, srs, null, transform);
+    }
+
+    public DXFDataStore(URL url, InputStream stream, String srs, String targetSrs, AffineTransform transform) throws IOException {
+        this.stream = stream;
         this.url = url;
         this.strippedFileName = getURLTypeName(url);
         this.srs = srs;
@@ -73,6 +80,9 @@ public class DXFDataStore extends AbstractFileDataStore {
     }
 
     static String getURLTypeName(URL url) throws IOException {
+        if (url == null) {
+            return "";
+        }
         String file = url.getFile();
         if (file.length() == 0) {
             return "unknown_dxf";
@@ -149,7 +159,7 @@ public class DXFDataStore extends AbstractFileDataStore {
 
         if (featureReader == null) {
             try {
-                featureReader = new DXFFeatureReader(url, typeName, srs, targetSrs, geometryType, dxfInsertsFilter, transform);
+                featureReader = new DXFFeatureReader(url, stream, typeName, srs, targetSrs, geometryType, dxfInsertsFilter, transform);
             } catch (DXFParseException e) {
                 throw new IOException("DXF parse exception" + e.getLocalizedMessage());
             }

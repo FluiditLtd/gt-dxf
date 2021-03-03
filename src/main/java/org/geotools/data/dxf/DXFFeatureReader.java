@@ -78,14 +78,18 @@ public class DXFFeatureReader implements FeatureReader {
     private AffineTransform2D transform = null;
     private MathTransform crsTransform = null;
 
-    public DXFFeatureReader(URL url, String typeName, String srs, String targetCrs, GeometryType geometryType, ArrayList dxfInsertsFilter, AffineTransform transform) throws IOException, DXFParseException {
+    public DXFFeatureReader(URL url, InputStream stream, String typeName, String srs, String targetCrs, GeometryType geometryType, ArrayList dxfInsertsFilter, AffineTransform transform) throws IOException, DXFParseException {
         InputStream cis = null;
         DXFLineNumberReader lnr = null;
         if (transform != null)
             this.transform = new AffineTransform2D(transform);
 
         try {
-            cis = new BufferedInputStream(url.openStream(), 64 * 1024);
+            if (stream != null) {
+                cis = new BufferedInputStream(stream, 64 * 1024);
+            } else {
+                cis = new BufferedInputStream(url.openStream(), 64 * 1024);
+            }
             cis.mark(9192);
             try {
                 GZIPInputStream gzip = new GZIPInputStream(cis, 64 * 1024);
@@ -93,7 +97,7 @@ public class DXFFeatureReader implements FeatureReader {
             } catch (IOException ex) {
                 try {
                     cis.reset();
-                    if (url.getFile().toString().toLowerCase().endsWith(".zip")) {
+                    if (url != null && url.getFile().toString().toLowerCase().endsWith(".zip")) {
                         ZipInputStream zip = new ZipInputStream(cis);
                         if (zip.getNextEntry() != null)
                             cis = zip;
