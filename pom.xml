@@ -64,11 +64,11 @@
     <distributionManagement>
         <repository>
             <id>fluidit-gitlab-maven</id>
-            <url>${env.FLUIDIT_MAVEN_REPOSITORY}</url>
+            <url>${env.FLUIDIT_MAVEN_REPOSITORY_URL}</url>
         </repository>
         <snapshotRepository>
             <id>fluidit-gitlab-maven</id>
-            <url>${env.FLUIDIT_MAVEN_REPOSITORY}</url>
+            <url>${env.FLUIDIT_MAVEN_REPOSITORY_URL}</url>
         </snapshotRepository>
     </distributionManagement>    
         
