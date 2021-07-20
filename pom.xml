@@ -30,7 +30,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <geotools.version>${project.version}</geotools.version>
+        <geotools.version>24.1</geotools.version>
         <maven.test.skip>true</maven.test.skip>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -63,10 +63,13 @@
 
     <distributionManagement>
         <repository>
-            <id>INT</id>
-            <name>Fluidit Internal</name>
-            <url></url>
+            <id>fluidit-gitlab-maven</id>
+            <url>${env.FLUIDIT_MAVEN_REPOSITORY}</url>
         </repository>
+        <snapshotRepository>
+            <id>fluidit-gitlab-maven</id>
+            <url>${env.FLUIDIT_MAVEN_REPOSITORY}</url>
+        </snapshotRepository>
     </distributionManagement>    
         
   
@@ -87,13 +90,12 @@
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
         <repository>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-          <id>boundless</id>
-          <name>Boundless Maven Repository</name>
-          <url>https://repo.boundlessgeo.com/main</url>
-        </repository>	
+            <id>osgeo-snapshot</id>
+            <name>OSGeo Snapshot Repository</name>
+            <url>https://repo.osgeo.org/repository/snapshot/</url>
+            <snapshots><enabled>true</enabled></snapshots>
+            <releases><enabled>false</enabled></releases>
+        </repository>
     </repositories>  
 
     <!-- =========================================================== -->
@@ -103,12 +105,12 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-main</artifactId>
-            <version>${project.version}</version>
+            <version>${geotools.version}</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-referencing</artifactId>
-            <version>${project.version}</version>
+            <version>${geotools.version}</version>
         </dependency>
     </dependencies>
 

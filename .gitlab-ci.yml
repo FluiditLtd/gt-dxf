@@ -1,0 +1,9 @@
+default:
+  image: $FLUIDIT_MAVEN_BUILD_CONTAINER
+
+deploy:
+  stage: deploy
+  script:
+    - mvn deploy
+  only:
+    - tags
