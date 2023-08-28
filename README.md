@@ -1,9 +1,9 @@
 # gt-dxf
-DXF feature reader implementation for GeoTools (24.1)
+DXF feature reader implementation for modern releases of GeoTools.
 
 This library is forked from the old, unsupported gt-dxf module, and since then the libary has seen multiple features added.
 What is most important, the library is kept up-to-date with GeoTools developments. Currently, the library provides quite
-feature complete DXF read only support in GeoTools.
+feature complete DXF read-only support in GeoTools.
 
 ## Building and installing
 
