@@ -13,11 +13,12 @@ The library uses Maven as the build system. It can simply be built and installed
 
 There are no tests in the code, unfortunately.
 
-## Usage
+## Usage
 
 Basically the software provides a feature store factory, that can be used for reading the DXF data, along with CRS information and
 possible _additional_ affine transform for the data (example in Kotlin):
-            
+
+```java
     import org.geotools.data.dxf.DXFDataStoreFactory
 
     val factory = DXFDataStoreFactory()
@@ -31,16 +32,19 @@ possible _additional_ affine transform for the data (example in Kotlin):
     map.put(DXFDataStoreFactory.PARAM_URL.key, url)
     val store = factory.createDataStore(map)
     val featureSource = store.getFeatureSource("")
-            
+```
 
 Afterwards, the layer can be added to MapContent:
 
+```java
     content.addLayer(FeatureLayer(featureSource, createStyle(), name))
+```
     
 
 All the DXF information for styling is exposed. The following code can be used for creating Style for FeatureLayer
 that properly displays the DXF with all the right colors and so on:
 
+```java
     import org.geotools.data.FeatureSource
     import org.geotools.data.FileDataStore
     import org.geotools.data.dxf.DXFDataStoreFactory
@@ -190,3 +194,4 @@ that properly displays the DXF with all the right colors and so on:
         s.featureTypeStyles().add(createTextStyle())
         return s
     }
+```
