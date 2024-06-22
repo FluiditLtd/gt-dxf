@@ -1,16 +1,16 @@
 package org.geotools.database;
 
-import org.geotools.data.DataSourceException;
-import org.geotools.data.Query;
-import org.geotools.data.FeatureLock;
-import org.geotools.data.FeatureLockException;
-import org.geotools.data.FeatureLocking;
-import org.geotools.data.LockingManager;
+import org.geotools.api.data.DataSourceException;
+import org.geotools.api.data.FeatureLock;
+import org.geotools.api.data.FeatureLockException;
+import org.geotools.api.data.FeatureLocking;
+import org.geotools.api.data.LockingManager;
+import org.geotools.api.data.Query;
+import org.geotools.api.data.SimpleFeatureLocking;
+import org.geotools.api.feature.simple.SimpleFeature;
+import org.geotools.api.feature.simple.SimpleFeatureType;
+import org.geotools.api.filter.Filter;
 import org.geotools.data.simple.SimpleFeatureIterator;
-import org.geotools.data.simple.SimpleFeatureLocking;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.filter.Filter;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
