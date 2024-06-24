@@ -3,6 +3,20 @@
  */
 package org.geotools.data.dxf;
 
+import org.geotools.api.data.DataSourceException;
+import org.geotools.api.data.FeatureReader;
+import org.geotools.api.data.ServiceInfo;
+import org.geotools.api.feature.IllegalAttributeException;
+import org.geotools.api.feature.simple.SimpleFeature;
+import org.geotools.api.feature.simple.SimpleFeatureType;
+import org.geotools.api.geometry.MismatchedDimensionException;
+import org.geotools.api.geometry.Position;
+import org.geotools.api.referencing.FactoryException;
+import org.geotools.api.referencing.NoSuchAuthorityCodeException;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.operation.MathTransform;
+import org.geotools.api.referencing.operation.Matrix;
+import org.geotools.api.referencing.operation.TransformException;
 import org.geotools.data.dxf.entities.DXFEntity;
 import org.geotools.data.dxf.entities.DXFInsert;
 import org.geotools.data.dxf.entities.DXFText;
@@ -11,7 +25,7 @@ import org.geotools.data.dxf.parser.DXFLineNumberReader;
 import org.geotools.data.dxf.parser.DXFParseException;
 import org.geotools.data.dxf.parser.DXFUnivers;
 import org.geotools.database.GeometryType;
-import org.geotools.geometry.DirectPosition2D;
+import org.geotools.geometry.Position2D;
 import org.locationtech.jts.geom.Geometry;
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
@@ -34,31 +48,17 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
-import org.geotools.data.DataSourceException;
-import org.geotools.data.FeatureReader;
-
 import org.geotools.referencing.NamedIdentifier;
-import org.opengis.geometry.DirectPosition;
-import org.opengis.geometry.MismatchedDimensionException;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 
 import org.geotools.data.DefaultServiceInfo;
-import org.geotools.data.ServiceInfo;
+
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.operation.transform.AffineTransform2D;
-import org.opengis.feature.IllegalAttributeException;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
-import org.opengis.referencing.operation.MathTransform;
-import org.opengis.referencing.operation.Matrix;
-import org.opengis.referencing.operation.TransformException;
 
 /**
  * @author Matthijs Laan, B3Partners
@@ -192,8 +192,8 @@ public class DXFFeatureReader implements FeatureReader {
 
                 if (crsTransform != null) 
                     try {
-                        DirectPosition pos1 = crsTransform.transform(new DirectPosition2D(ft.getCoordinateReferenceSystem(), x2, y2), null);
-                        DirectPosition pos2 = crsTransform.transform(new DirectPosition2D(ft.getCoordinateReferenceSystem(), x2 + 1, y2 + 1), null);
+                        Position pos1 = crsTransform.transform(new Position2D(ft.getCoordinateReferenceSystem(), x2, y2), null);
+                        Position pos2 = crsTransform.transform(new Position2D(ft.getCoordinateReferenceSystem(), x2 + 1, y2 + 1), null);
                         rotation = rotation + Math.toDegrees(Math.atan2(pos2.getOrdinate(1) - pos1.getOrdinate(1), pos2.getOrdinate(0) - pos1.getOrdinate(0)));
                     } catch (MismatchedDimensionException ex) {
                         Logger.global.log(Level.SEVERE, "ex", ex);

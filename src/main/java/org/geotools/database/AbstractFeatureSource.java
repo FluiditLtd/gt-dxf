@@ -1,24 +1,24 @@
 package org.geotools.database;
 
-import org.geotools.data.DataSourceException;
-import org.geotools.data.DataStore;
+import org.geotools.api.data.DataSourceException;
+import org.geotools.api.data.DataStore;
+import org.geotools.api.feature.type.Name;
+import org.geotools.api.filter.Filter;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
 import org.geotools.data.DefaultFeatureResults;
 import org.geotools.data.Diff;
-import org.geotools.data.Query;
-import org.geotools.data.QueryCapabilities;
-import org.geotools.data.ResourceInfo;
-import org.geotools.data.Transaction;
+import org.geotools.api.data.Query;
+import org.geotools.api.data.QueryCapabilities;
+import org.geotools.api.data.ResourceInfo;
+import org.geotools.api.data.Transaction;
 import org.geotools.util.factory.Hints;
 import org.locationtech.jts.geom.Envelope;
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.data.simple.SimpleFeatureSource;
+import org.geotools.api.data.SimpleFeatureSource;
 import org.geotools.data.store.EmptyFeatureCollection;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.util.logging.Logging;
-import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.Name;
-import org.opengis.filter.Filter;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.feature.simple.SimpleFeatureType;
 
 import java.io.IOException;
 import java.net.URI;

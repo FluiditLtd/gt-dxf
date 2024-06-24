@@ -14,13 +14,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.geotools.data.DataStore;
-import org.geotools.data.DataStoreFactorySpi;
-import org.geotools.data.FileDataStore;
-import org.geotools.data.FileDataStoreFactorySpi;
+import org.geotools.api.data.DataStore;
+import org.geotools.api.data.DataStoreFactorySpi;
+import org.geotools.api.data.FileDataStore;
+import org.geotools.api.data.FileDataStoreFactorySpi;
+import org.geotools.api.referencing.FactoryException;
+import org.geotools.api.referencing.NoSuchAuthorityCodeException;
 import org.geotools.referencing.CRS;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
 
 public class DXFDataStoreFactory implements FileDataStoreFactorySpi {
     public static final DataStoreFactorySpi.Param PARAM_INPUT_STREAM = new DataStoreFactorySpi.Param("stream", InputStream.class, "input stream of a .dxf file");
